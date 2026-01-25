@@ -1,0 +1,73 @@
+/**
+ * CSS for admin functionality of the plugin.
+ */
+
+.ventocalendar-datetime-picker {
+	width: 100%;
+	max-width: 300px;
+	padding: 8px 12px;
+	font-size: 14px;
+	line-height: 1.5;
+	border: 1px solid #8c8f94;
+	border-radius: 4px;
+	background-color: #fff;
+	color: #2c3338;
+	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.ventocalendar-datetime-picker:focus {
+	border-color: #2271b1;
+	box-shadow: 0 0 0 1px #2271b1;
+	outline: 2px solid transparent;
+}
+
+.ventocalendar-datetime-picker.error {
+	border-color: #d63638;
+}
+
+.ventocalendar-datetime-picker::-webkit-calendar-picker-indicator {
+	cursor: pointer;
+	opacity: 0.6;
+	transition: opacity 0.2s;
+}
+
+.ventocalendar-datetime-picker::-webkit-calendar-picker-indicator:hover {
+	opacity: 1;
+}
+
+.ventocalendar-help-section {
+	max-width: 1000px;
+}
+
+.ventocalendar-help-section h2 {
+	font-size: 23px;
+	font-weight: 400;
+	margin: 0 0 15px 0;
+}
+
+.ventocalendar-help-section h3 {
+	font-size: 19px;
+	font-weight: 600;
+	margin: 20px 0 10px 0;
+}
+
+.ventocalendar-help-section h4 {
+	font-size: 16px;
+	font-weight: 600;
+	margin: 20px 0 10px 0;
+}
+
+.ventocalendar-help-section code {
+	background: #f0f0f1;
+	padding: 2px 6px;
+	border-radius: 3px;
+	font-size: 13px;
+}
+
+.ventocalendar-help-section .dashicons {
+	font-size: 20px;
+	width: 20px;
+	height: 20px;
+	vertical-align: middle;
+	margin-right: 5px;
+}

@@ -1,0 +1,1058 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-01-24T19:59:17+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.11.0\n"
+"X-Domain: ventocalendar\n"
+
+#: admin/class-ventocalendar-admin.php:63
+#: admin/class-ventocalendar-admin.php:64
+msgid "VentoCalendar"
+msgstr ""
+
+#: admin/class-ventocalendar-admin.php:75
+#: admin/class-ventocalendar-admin.php:76
+#: includes/cpt/class-ventocalendar-cpt-event.php:71
+#: includes/cpt/class-ventocalendar-cpt-event.php:73
+msgid "Events"
+msgstr ""
+
+#: admin/class-ventocalendar-admin.php:84
+#: admin/class-ventocalendar-admin.php:85
+#: includes/cpt/class-ventocalendar-cpt-event.php:75
+msgid "Add new event"
+msgstr ""
+
+#: admin/class-ventocalendar-admin.php:93
+#: admin/class-ventocalendar-admin.php:94
+msgid "Settings"
+msgstr ""
+
+#: admin/class-ventocalendar-admin.php:103
+#: admin/class-ventocalendar-admin.php:104
+msgid "Usage / Help"
+msgstr ""
+
+#: admin/class-ventocalendar-admin.php:145
+msgid "General settings"
+msgstr ""
+
+#: admin/class-ventocalendar-admin.php:153
+msgid "Show event info automatically"
+msgstr ""
+
+#: admin/class-ventocalendar-admin.php:163
+#: admin/partials/ventocalendar-admin-help-display.php:234
+#: admin/partials/ventocalendar-admin-help-display.php:303
+#: admin/js/blocks/calendar.js:195
+#: admin/js/blocks/event-info.js:85
+msgid "Show start time"
+msgstr ""
+
+#: admin/class-ventocalendar-admin.php:173
+#: admin/partials/ventocalendar-admin-help-display.php:238
+#: admin/partials/ventocalendar-admin-help-display.php:307
+#: admin/js/blocks/calendar.js:206
+#: admin/js/blocks/event-info.js:92
+msgid "Show end time"
+msgstr ""
+
+#: admin/class-ventocalendar-admin.php:187
+msgid "Configure the VentoCalendar plugin settings."
+msgstr ""
+
+#: admin/class-ventocalendar-admin.php:205
+msgid "Automatically display event information on single event pages"
+msgstr ""
+
+#: admin/class-ventocalendar-admin.php:225
+msgid "Include the start time in the event information"
+msgstr ""
+
+#: admin/class-ventocalendar-admin.php:245
+msgid "Include the end time in the event information"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:58
+msgid "Quick start"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:61
+#: admin/partials/ventocalendar-admin-help-display.php:174
+msgid "Gutenberg blocks"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:64
+#: admin/partials/ventocalendar-admin-help-display.php:350
+msgid "Shortcodes"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:72
+msgid "Welcome to VentoCalendar!"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:75
+msgid "VentoCalendar is a simple yet powerful plugin for creating and managing events on your WordPress site. It provides a custom post type for events with start/end dates, color coding, a built-in calendar component to display events, and automatic display of event information on the frontend."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:80
+msgid "Creating Your First Event"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:84
+msgid "Navigate to Events"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:85
+msgid "In your WordPress admin menu, click on \"VentoCalendar\" and then \"Add new event\"."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:88
+msgid "Add event details"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:89
+msgid "Fill in the event title and description just like a regular post."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:92
+msgid "Set event dates and times"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:93
+msgid "In the \"Event Details\" metabox, set the start date (required) and optionally the start time and end time. For multi-day events, check the \"All day event\" checkbox and specify an end date."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:96
+msgid "Choose event color"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:97
+msgid "Select a color for your event. This color will be used in the calendar view."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:100
+msgid "Publish"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:101
+msgid "Click \"Publish\" to make your event live."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:107
+msgid "What you can do next"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:112
+msgid "Display a calendar"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:114
+msgid "Show all your events in a beautiful monthly calendar view. You can add it to any post or page using:"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:116
+msgid "The calendar Gutenberg block (search for \"Events Calendar\")"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:117
+msgid "The shortcode [ventocalendar-calendar]"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:121
+msgid "Learn about Blocks"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:124
+msgid "Learn about Shortcodes"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:132
+msgid "Configure settings"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:134
+msgid "Go to VentoCalendar > Settings to configure how event information is automatically displayed on event posts."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:137
+msgid "Go to Settings"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:145
+msgid "Advanced usage: Shortcodes"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:147
+msgid "For advanced users, you can use shortcodes within event content to display specific event information like dates and times with custom formatting."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:148
+msgid "Available shortcodes:"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:157
+msgid "View shortcode documentation"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:165
+#: admin/partials/ventocalendar-admin-help-display.php:340
+#: admin/partials/ventocalendar-admin-help-display.php:627
+msgid "Tip:"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:166
+msgid "Event information can be displayed automatically on event pages, or you can use blocks and shortcodes for more control over placement and formatting."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:177
+msgid "VentoCalendar provides two Gutenberg blocks to help you display event information and calendars on your site."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:186
+msgid "Events Calendar Block"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:189
+msgid "This block displays a monthly calendar view of all your published events with an intuitive and interactive interface."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:191
+#: admin/partials/ventocalendar-admin-help-display.php:284
+msgid "How to use"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:193
+msgid "Edit any post or page in the Block Editor (Gutenberg)"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:194
+#: admin/partials/ventocalendar-admin-help-display.php:287
+msgid "Click the \"+\" button to add a new block"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:195
+msgid "Search for \"Events Calendar\" in the block inserter"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:196
+msgid "The calendar will automatically appear with all your published events"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:197
+msgid "Customize the calendar settings in the sidebar panel"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:200
+#: admin/partials/ventocalendar-admin-help-display.php:293
+msgid "Block settings"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:204
+#: admin/partials/ventocalendar-admin-help-display.php:297
+msgid "Setting"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:205
+#: admin/partials/ventocalendar-admin-help-display.php:298
+#: admin/partials/ventocalendar-admin-help-display.php:373
+#: admin/partials/ventocalendar-admin-help-display.php:500
+msgid "Description"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:210
+#: admin/js/blocks/calendar.js:96
+msgid "View type"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:211
+msgid "Choose Calendar to display the events of the month in a calendar view, or List to display a list of events for each month"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:214
+#: admin/js/blocks/calendar.js:113
+msgid "First day of week"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:215
+msgid "Choose whether to start the week on Monday or Sunday"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:218
+#: admin/js/blocks/calendar.js:130
+msgid "Initial month"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:219
+msgid "Set the initial month to display when the calendar loads (format: YYYY-MM, e.g., 2024-06). Leave empty to show the current month"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:222
+msgid "Layout"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:223
+msgid "Choose between three visual layouts: Basic, Compact, and Clean to adjust spacing and button appearance"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:226
+#: admin/js/blocks/calendar.js:173
+msgid "Show start date"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:227
+msgid "Display the start date when viewing event details in the modal popup"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:230
+#: admin/js/blocks/calendar.js:184
+msgid "Show end date"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:231
+msgid "Display the end date when viewing event details in the modal popup"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:235
+msgid "Include the time in the start date display in the modal popup"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:239
+msgid "Include the time in the end date display in the modal popup"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:242
+#: admin/js/blocks/calendar.js:217
+msgid "Show Add to Google Calendar button"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:243
+msgid "Include the Google add to calendar button in the modal popup"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:246
+#: admin/js/blocks/calendar.js:233
+msgid "Show Add to Apple Calendar button"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:247
+msgid "Include the Apple add to calendar button in the modal popup"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:252
+msgid "Calendar features"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:254
+msgid "Monthly view:"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:254
+msgid "Navigate between months using Previous, Next, and Today buttons"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:255
+msgid "List view:"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:255
+msgid "Navigate between months and display a simple list of events for each month"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:256
+msgid "Event colors:"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:256
+msgid "Events are displayed in the colors you assign to them"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:257
+msgid "Multi-day events:"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:257
+msgid "Events spanning multiple days appear as horizontal bars across the calendar"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:258
+msgid "Event details modal:"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:258
+msgid "Click on any day to see all events scheduled for that day with links to their full details"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:259
+msgid "Responsive design:"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:259
+msgid "The calendar automatically adapts to mobile devices for optimal viewing"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:260
+msgid "Design integration:"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:260
+msgid "Design integration: Clean design that blends naturally with your WordPress theme."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:266
+msgid "Note:"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:267
+msgid "The calendar will only display published events. Draft and scheduled events are not shown in the calendar view."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:279
+msgid "Event Info Block"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:282
+msgid "This block displays event date and time information with the same styling as the automatic display, but gives you full control over the format and appearance."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:286
+msgid "Edit an event post in the Block Editor (Gutenberg)"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:288
+msgid "Search for \"Event Info\" in the block inserter"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:289
+msgid "The block will automatically display the event dates and times"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:290
+msgid "Customize the block settings in the sidebar panel"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:304
+msgid "Check this box to include the time in the start date display"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:308
+msgid "Check this box to include the time in the end date display"
+msgstr ""
+
+#. translators: %s: link to WordPress general settings
+#: admin/partials/ventocalendar-admin-help-display.php:317
+msgid "Date and time formats are automatically taken from your WordPress general settings. You can change them in %s."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:318
+#: admin/partials/ventocalendar-admin-help-display.php:406
+#: admin/partials/ventocalendar-admin-help-display.php:572
+msgid "Settings > General"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:326
+#: admin/partials/ventocalendar-admin-help-display.php:467
+msgid "Important:"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:327
+msgid "The Event Info block is only available when editing Event posts. If you try to use it in other post types, it will display a message indicating that it only works with events."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:331
+msgid "When to Use"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:333
+msgid "Automatic display:"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:333
+msgid "Use the plugin settings to show event info automatically at the beginning of all event posts with consistent formatting."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:334
+msgid "Event info block:"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:334
+msgid "Use this block when you need custom formatting for specific events, or want to place the event info in a specific location within your content."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:341
+msgid "You can use both the automatic display and the block together. The block gives you flexibility to add event information anywhere in your content with different formats."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:353
+msgid "VentoCalendar provides several shortcodes that you can use to display event information in your content."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:362
+msgid "Event information shortcodes"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:365
+msgid "These shortcodes can be used within event post content to display specific event information. They only work in event posts."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:367
+msgid "Available shortcodes"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:372
+msgid "Shortcode"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:374
+msgid "Example Output"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:380
+msgid "Displays the event start date using the format configured in WordPress Settings > General."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:385
+msgid "Displays the event end date using the format configured in WordPress Settings > General."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:390
+msgid "Displays the event start time using the format configured in WordPress Settings > General."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:395
+msgid "Displays the event end time using the format configured in WordPress Settings > General."
+msgstr ""
+
+#. translators: %s: link to WordPress general settings
+#: admin/partials/ventocalendar-admin-help-display.php:405
+msgid "All shortcodes use the date and time formats configured in your WordPress general settings. You can change them in %s."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:411
+#: admin/partials/ventocalendar-admin-help-display.php:577
+msgid "Usage examples"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:414
+msgid "Example 1: Display full date and time"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:416
+msgid "Event starts on [ventocalendar-start-date] at [ventocalendar-start-time] and ends at [ventocalendar-end-time]."
+msgstr ""
+
+#. translators: 1: example start date, 2: example start time, 3: example end date, 4: example end time
+#: admin/partials/ventocalendar-admin-help-display.php:422
+msgid "Result: Event starts on %1$s at %2$s and ends at %3$s."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:432
+msgid "Example 2: Just the date"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:434
+msgid "Join us on [ventocalendar-start-date] for this amazing event!"
+msgstr ""
+
+#. translators: %s: example date
+#: admin/partials/ventocalendar-admin-help-display.php:440
+msgid "Result: Join us on %s for this amazing event!"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:448
+msgid "Example 3: Only times"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:450
+msgid "From [ventocalendar-start-time] to [ventocalendar-end-time]"
+msgstr ""
+
+#. translators: 1: example start time, 2: example end time
+#: admin/partials/ventocalendar-admin-help-display.php:456
+msgid "Result: From %1$s to %2$s"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:468
+msgid "These shortcodes only work within event post content. If used in other post types, they will not display anything."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:479
+msgid "Events calendar shortcode"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:482
+msgid "Display your events in an elegant monthly calendar view. This shortcode can be used in any post, page, or widget area."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:484
+msgid "Basic usage"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:492
+msgid "Shortcode parameters"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:497
+msgid "Parameter"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:498
+msgid "Values"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:499
+msgid "Default"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:508
+msgid "Set the calendar view type"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:514
+msgid "Set the first day of the week in the calendar"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:518
+msgid "YYYY-MM format"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:519
+#: admin/js/blocks/calendar.js:136
+msgid "Current month"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:520
+msgid "Set the initial month to display (e.g., 2024-06 for June 2024)"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:526
+msgid "Set the layout in the calendar"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:532
+msgid "Show the start date in the event details modal"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:538
+msgid "Show the end date in the event details modal"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:544
+msgid "Show the start time in the event details modal"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:550
+msgid "Show the end time in the event details modal"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:556
+msgid "Show the Google add to calendar button in the event details modal"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:562
+msgid "Show the Apple add to calendar button in the event details modal"
+msgstr ""
+
+#. translators: %s: link to WordPress general settings
+#: admin/partials/ventocalendar-admin-help-display.php:571
+msgid "The calendar uses the date and time formats configured in your WordPress general settings. You can change them in %s."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:580
+msgid "Basic calendar"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:587
+msgid "Calendar with sunday as first day"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:594
+msgid "Calendar showing times in event details"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:601
+msgid "Calendar starting in a specific month"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:606
+msgid "This will display December 2024 when the calendar loads. Users can still navigate to other months."
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:611
+msgid "Calendar with custom settings"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:618
+msgid "Basic calendar showing events in a list"
+msgstr ""
+
+#: admin/partials/ventocalendar-admin-help-display.php:628
+msgid "You can also use the Events Calendar Gutenberg block for a visual way to add and configure the calendar in the block editor."
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:72
+msgid "Event"
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:74
+msgid "Add new"
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:76
+msgid "Edit event"
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:77
+msgid "New event"
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:78
+#: public/js/ventocalendar-calendar.js:62
+msgid "View event"
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:79
+msgid "Search events"
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:80
+msgid "No events found"
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:81
+msgid "No events found in trash"
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:199
+msgid "Event details"
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:245
+#: includes/cpt/class-ventocalendar-cpt-event.php:651
+msgid "Start date"
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:261
+msgid "Select the start date for the event (required)."
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:271
+msgid "Start time"
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:285
+msgid "Select the start time (optional)."
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:295
+msgid "End time"
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:309
+msgid "Select the end time (optional)."
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:319
+#: includes/cpt/class-ventocalendar-cpt-event.php:652
+msgid "End date"
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:332
+msgid "Select the end date for multi-day events (optional). Leave empty for single-day events."
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:350
+msgid "All day event"
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:353
+msgid "Check this for all-day events."
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:362
+msgid "Event color"
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:375
+msgid "Select a color for the event."
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:432
+msgid "Invalid start date format."
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:435
+#: admin/js/ventocalendar-meta-box.js:198
+msgid "Start date is required."
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:452
+msgid "Invalid end date format."
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:473
+msgid "Invalid start time format."
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:491
+msgid "Invalid end time format."
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:617
+#: admin/js/ventocalendar-meta-box.js:221
+msgid "End time cannot be before the start time."
+msgstr ""
+
+#: includes/cpt/class-ventocalendar-cpt-event.php:628
+#: admin/js/ventocalendar-meta-box.js:239
+msgid "End date must be on or after the start date."
+msgstr ""
+
+#: admin/js/blocks/calendar.js:18
+#: admin/js/blocks/calendar.js:279
+msgid "Events Calendar"
+msgstr ""
+
+#: admin/js/blocks/calendar.js:19
+msgid "Display a monthly calendar view of your events"
+msgstr ""
+
+#: admin/js/blocks/calendar.js:92
+msgid "Calendar settings"
+msgstr ""
+
+#: admin/js/blocks/calendar.js:100
+msgid "Calendar"
+msgstr ""
+
+#: admin/js/blocks/calendar.js:104
+msgid "List"
+msgstr ""
+
+#: admin/js/blocks/calendar.js:117
+#: public/js/ventocalendar-calendar.js:15
+msgid "Monday"
+msgstr ""
+
+#: admin/js/blocks/calendar.js:121
+#: public/js/ventocalendar-calendar.js:14
+msgid "Sunday"
+msgstr ""
+
+#: admin/js/blocks/calendar.js:131
+msgid "Initial month to display (format: YYYY–MM, e.g., 2024–03). Leave empty to show current month."
+msgstr ""
+
+#: admin/js/blocks/calendar.js:142
+msgid "Laoyut"
+msgstr ""
+
+#: admin/js/blocks/calendar.js:146
+msgid "Basic"
+msgstr ""
+
+#: admin/js/blocks/calendar.js:150
+msgid "Compact"
+msgstr ""
+
+#: admin/js/blocks/calendar.js:154
+msgid "Clean"
+msgstr ""
+
+#: admin/js/blocks/calendar.js:166
+msgid "Event details display"
+msgstr ""
+
+#: admin/js/blocks/calendar.js:174
+msgid "Display the start date in the event modal"
+msgstr ""
+
+#: admin/js/blocks/calendar.js:185
+msgid "Display the end date in the event modal"
+msgstr ""
+
+#: admin/js/blocks/calendar.js:196
+msgid "Display the start time in the event modal"
+msgstr ""
+
+#: admin/js/blocks/calendar.js:207
+msgid "Display the end time in the event modal"
+msgstr ""
+
+#: admin/js/blocks/calendar.js:221
+msgid "Display the Google add to calendar button in the event modal"
+msgstr ""
+
+#: admin/js/blocks/calendar.js:237
+msgid "Display the Apple add to calendar button in the event modal"
+msgstr ""
+
+#: admin/js/blocks/calendar.js:290
+msgid "The calendar will be displayed here"
+msgstr ""
+
+#: admin/js/blocks/event-info.js:25
+#: admin/js/blocks/event-info.js:111
+#: admin/js/blocks/event-info.js:135
+msgid "Event Info"
+msgstr ""
+
+#: admin/js/blocks/event-info.js:81
+msgid "Time display settings"
+msgstr ""
+
+#: admin/js/blocks/event-info.js:116
+msgid "This block can only be used in Event posts."
+msgstr ""
+
+#: admin/js/blocks/event-info.js:140
+msgid "Please set the event start date in the Event Details metabox."
+msgstr ""
+
+#: admin/js/ventocalendar-meta-box.js:280
+msgid "Please review the event dates and times."
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:16
+msgid "Tuesday"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:17
+msgid "Wednesday"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:18
+msgid "Thursday"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:19
+msgid "Friday"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:20
+msgid "Saturday"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:24
+msgid "January"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:25
+msgid "February"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:26
+msgid "March"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:27
+msgid "April"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:28
+#: public/js/ventocalendar-calendar.js:43
+msgid "May"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:29
+msgid "June"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:30
+msgid "July"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:31
+msgid "August"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:32
+msgid "September"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:33
+msgid "October"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:34
+msgid "November"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:35
+msgid "December"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:39
+msgid "Jan"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:40
+msgid "Feb"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:41
+msgid "Mar"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:42
+msgid "Apr"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:44
+msgid "Jun"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:45
+msgid "Jul"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:46
+msgid "Aug"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:47
+msgid "Sep"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:48
+msgid "Oct"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:49
+msgid "Nov"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:50
+msgid "Dec"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:54
+msgid "Previous month"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:55
+msgid "Today"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:56
+msgid "Next month"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:57
+msgid "No events on this day"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:58
+msgid "No events on this month"
+msgstr ""
+
+#: public/js/ventocalendar-calendar.js:63
+msgid "Add to calendar"
+msgstr ""

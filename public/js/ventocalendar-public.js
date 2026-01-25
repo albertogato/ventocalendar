@@ -1,0 +1,5 @@
+/**
+ * VentoCalendar public Javascript.
+ *
+ * @package
+ */

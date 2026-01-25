@@ -1,0 +1,563 @@
+/**
+ * CSS for the Calendar.
+ */
+
+:root {
+	--ventocalendar-bg: #fff;
+	--ventocalendar-button-bg: #fff;
+	--ventocalendar-button-bg-hover: #f9fafb;
+	--ventocalendar-button-border: #d1d5db;
+	--ventocalendar-button-border-hover: #9ca3af;
+	--ventocalendar-separator: #e5e7eb;
+	--ventocalendar-text: #1f2937;
+	--ventocalendar-text-secondary: #6b7280;
+	--ventocalendar-text-highlight: #2271b1;
+	--ventocalendar-day-bg-secondary: #f9fafb;
+	--ventocalendar-box-bg: #f8f9fa;
+	--ventocalendar-box-bg-hover: #f3f4f6;
+}
+
+.ventocalendar-calendar {
+	max-width: 1200px;
+	margin: 2rem auto;
+	padding: 1rem;
+	background: var(--ventocalendar-bg);
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+/* Integration with WordPress themes */
+
+.ventocalendar-calendar * {
+	box-sizing: border-box;
+}
+
+.ventocalendar-calendar a {
+	text-decoration: none;
+}
+
+.ventocalendar-calendar button {
+	font-family: inherit;
+}
+
+.calendar-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding-bottom: 1rem;
+}
+
+.calendar-header .month-year {
+	margin: 0;
+	font-size: 1.5rem;
+	font-weight: 600;
+	color: var(--ventocalendar-text);
+	flex: 1;
+	text-align: center;
+}
+
+.calendar-header .nav-button,
+.calendar-header .today-button {
+	padding: 0.5rem 1rem;
+	border: 1px solid var(--ventocalendar-button-border);
+	background: var(--ventocalendar-button-bg);
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	font-size: 0.875rem;
+	font-weight: 500;
+	color: var(--ventocalendar-text);
+}
+
+.calendar-header .nav-button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	padding: 0;
+}
+
+.calendar-header .today-button {
+	margin: 0 1rem;
+	height: 40px;
+}
+
+.calendar-header .nav-button:hover,
+.calendar-header .today-button:hover {
+	background: var(--ventocalendar-button-bg-hover);
+	border-color: var(--ventocalendar-button-border-hover);
+	color: var(--ventocalendar-text);
+}
+
+.calendar-header .nav-button:active,
+.calendar-header .today-button:active {
+	transform: scale(0.95);
+}
+
+.modal-close svg {
+	display: block;
+	width: 24px;
+	height: 24px;
+}
+
+.calendar-header .nav-button svg {
+	display: block;
+	width: 20px;
+	height: 20px;
+}
+
+.calendar-loading {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 400px;
+}
+
+.calendar-grid {
+	display: grid;
+	gap: 1px;
+	background: var(--ventocalendar-separator);
+}
+
+.weekday-header {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	gap: 1px;
+	background: var(--ventocalendar-separator);
+	overflow: hidden;
+}
+
+.weekday {
+	background: var(--ventocalendar-day-bg-secondary);
+	padding: 0.75rem;
+	text-align: center;
+	font-weight: 600;
+	font-size: 0.875rem;
+	color: var(--ventocalendar-text-secondary);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.calendar-week {
+	position: relative;
+}
+
+.week-days {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	gap: 1px;
+	background: var(--ventocalendar-separator);
+}
+
+.calendar-day {
+	background: var(--ventocalendar-bg);
+	min-height: 120px;
+	padding: 0.5rem;
+	padding-bottom: 3rem;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+	position: relative;
+}
+
+.calendar-day:hover {
+	background: var(--ventocalendar-day-bg-secondary);
+}
+
+.calendar-day.other-month {
+	background: var(--ventocalendar-day-bg-secondary);
+	color: #9ca3af;
+}
+
+.calendar-day.other-month:hover {
+	background: var(--ventocalendar-separator);
+}
+
+.calendar-day.today {
+	background: #eff6ff;
+}
+
+.day-number {
+	font-size: 0.875rem;
+	font-weight: 600;
+	color: var(--ventocalendar-text);
+	margin-bottom: 0.25rem;
+}
+
+.calendar-day.other-month .day-number {
+	color: var(--ventocalendar-text-secondary);
+}
+
+.calendar-day.today .day-number {
+	color: var(--ventocalendar-text-highlight);
+}
+
+.day-events {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	margin-top: 0.5rem;
+}
+
+.event-dot-with-time {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	font-size: 0.65rem;
+	line-height: 1;
+}
+
+.event-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	flex-shrink: 0;
+	display: inline-block;
+}
+
+.event-time {
+	color: var(--ventocalendar-text-secondary);
+	font-weight: 500;
+	white-space: nowrap;
+}
+
+.week-event-bars {
+	position: relative;
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	gap: 1px;
+	height: 80px;
+	pointer-events: none;
+	margin-top: -80px;
+	z-index: 10;
+}
+
+.event-bar {
+	position: absolute;
+	height: 20px;
+	border-radius: 4px;
+	display: flex;
+	align-items: center;
+	padding: 0 8px;
+	font-size: 0.7rem;
+	font-weight: 500;
+	color: var(--ventocalendar-bg);
+	cursor: default;
+	pointer-events: none;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.event-bar-title {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.calendar-modal-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 999999;
+	padding: 1rem;
+}
+
+.calendar-modal {
+	background: #fff;
+	border-radius: 8px;
+	box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+	max-width: 600px;
+	width: 100%;
+	max-height: 80vh;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+.modal-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1rem;
+	border-bottom: 1px solid var(--ventocalendar-separator);
+}
+
+.modal-header h3 {
+	margin: 0;
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: var(--ventocalendar-text);
+}
+
+.modal-close {
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 0.25rem;
+	color: var(--ventocalendar-text-secondary);
+	transition: color 0.2s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.modal-close:hover {
+	color: var(--ventocalendar-text);
+}
+
+.modal-body {
+	padding: 1rem;
+	overflow-y: auto;
+}
+
+.no-events {
+	text-align: center;
+	color: var(--ventocalendar-text-secondary);
+	padding: 2rem;
+	font-style: italic;
+}
+
+.events-list {
+	list-style: none !important;
+	margin: 0;
+	padding: 0 !important;
+}
+
+.event-item {
+	margin-bottom: 1rem;
+	background: var(--ventocalendar-box-bg);
+	transition: background-color 0.2s ease;
+	border-left: 8px solid;
+}
+
+.event-item:last-child {
+	margin-bottom: 0;
+}
+
+/*.event-item:hover {
+	background: var(--ventocalendar-box-bg-hover);
+}*/
+
+.event-block {
+	padding: 1rem;
+}
+
+.event-color-indicator {
+	width: 4px;
+	min-width: 4px;
+	border-radius: 2px;
+	flex-shrink: 0;
+}
+
+.event-details {
+	flex: 1;
+	min-width: 0;
+}
+
+.event-title {
+	font-weight: 600;
+	font-size: 1rem;
+	color: var(--ventocalendar-text);
+	margin-bottom: 0.5rem;
+	transition: color 0.2s ease;
+}
+
+.event-actions {
+	display: flex;
+	align-items: center;
+	padding: 0.5rem 0 0 0;
+}
+
+.event-actions .event-link {
+	display: flex;
+}
+
+.event-actions .event-link a {
+	text-decoration: none;
+	font-size: 0.875rem;
+	font-weight: 500;
+	color: var(--ventocalendar-text);
+	transition: all 0.2s ease;
+}
+
+.event-actions .event-add-to-my-calendar-buttons a {
+	text-decoration: none;
+	font-size: 0.75rem;
+	font-weight: 500;
+}
+
+.event-actions .event-link a:hover {
+	color: var(--ventocalendar-text-highlight);
+}
+
+.event-actions .event-add-to-my-calendar-buttons {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin-left: auto;
+}
+
+.event-actions .event-add-to-my-calendar-buttons span {
+	font-size: 0.75rem;
+}
+
+.event-actions .event-add-to-my-calendar-buttons a:hover {
+	color: var(--ventocalendar-text-highlight);
+}
+
+.event-meta {
+	margin-top: 0.5rem;
+	font-size: 0.875rem;
+	color: var(--ventocalendar-text-secondary);
+}
+
+.meta-item {
+	line-height: 1.5;
+}
+
+.ventocalendar-calendar.layout-compact {
+	box-shadow: none;
+	padding: 0;
+}
+
+.ventocalendar-calendar.layout-clean {
+	box-shadow: none;
+	padding: 0;
+}
+
+.ventocalendar-calendar.layout-clean .calendar-header .nav-button,
+.ventocalendar-calendar.layout-clean .calendar-header .today-button {
+	border: 0 none;
+}
+
+.ventocalendar-calendar.layout-clean .weekday {
+	background: var(--ventocalendar-bg);
+}
+
+
+@media (max-width: 768px) {
+
+	.ventocalendar-calendar {
+		padding: 1rem;
+		margin: 1rem auto;
+	}
+
+	.calendar-header .month-year {
+		font-size: 1.25rem;
+	}
+
+	.calendar-day {
+		min-height: 80px;
+		padding: 0.25rem;
+		padding-bottom: 2rem;
+	}
+
+	.day-number {
+		font-size: 0.75rem;
+	}
+
+	.event-dot-with-time {
+		font-size: 0.6rem;
+	}
+
+	.event-dot {
+		width: 6px;
+		height: 6px;
+	}
+
+	.event-time {
+		display: none;
+	}
+
+	.week-event-bars {
+		height: 50px;
+		margin-top: -50px;
+	}
+
+	.event-bar {
+		font-size: 0;
+		height: 12px;
+		padding: 0 2px;
+		min-height: 12px;
+	}
+
+	.event-bar-title {
+		display: none;
+	}
+
+	.weekday {
+		font-size: 0.75rem;
+		padding: 0.5rem 0.25rem;
+	}
+
+	.calendar-modal {
+		max-height: 90vh;
+	}
+
+	.modal-header,
+	.modal-body {
+		padding: 1rem;
+	}
+
+	.event-block {
+		padding: 0.75rem;
+	}
+}
+
+@media (max-width: 480px) {
+
+	.calendar-header {
+		flex-wrap: wrap;
+	}
+
+	.calendar-header .month-year {
+		order: -1;
+		width: 100%;
+		font-size: 1rem;
+	}
+
+	.calendar-day {
+		min-height: 60px;
+		padding-bottom: 1.5rem;
+	}
+
+	.event-dot-with-time {
+		font-size: 0.55rem;
+		gap: 3px;
+	}
+
+	.event-dot {
+		width: 5px;
+		height: 5px;
+	}
+
+	.week-event-bars {
+		height: 25px;
+		margin-top: -25px;
+	}
+
+	.event-bar {
+		height: 6px;
+		font-size: 0;
+		min-height: 6px;
+		padding: 0;
+		border-radius: 2px;
+	}
+
+	.event-bar-title {
+		display: none;
+	}
+
+	.weekday {
+		font-size: 0.65rem;
+		padding: 0.5rem 0.125rem;
+	}
+}

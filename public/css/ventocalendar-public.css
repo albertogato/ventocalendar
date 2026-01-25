@@ -1,0 +1,45 @@
+/**
+ * CSS for public functionality of the plugin.
+ */
+
+.ventocalendar-date-info {
+	background: #f8f9fa;
+	border-left: 8px solid #2271b1;
+	padding: 1rem 1.25rem;
+	margin: 0 0 2rem 0;
+	font-size: 1rem;
+	line-height: 1.6;
+}
+
+.ventocalendar-date-container {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.ventocalendar-date-value {
+	font-weight: 500;
+	color: #1f2937;
+}
+
+.ventocalendar-date-separator {
+	color: #1f2937;
+	font-weight: 300;
+}
+
+/* Elementor compatibility */
+.elementor-widget-theme-post-content .ventocalendar-date-info {
+	font-family: inherit;
+}
+
+/* Divi compatibility */
+.et_pb_post .ventocalendar-date-info {
+	font-family: inherit;
+}
+
+/* Better integration with common WordPress themes */
+article .ventocalendar-date-info:first-child,
+.entry-content .ventocalendar-date-info:first-child,
+.post-content .ventocalendar-date-info:first-child {
+	margin-top: 0;
+}
