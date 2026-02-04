@@ -3,7 +3,7 @@ Contributors: albertogato
 Tags: events, calendar, event calendar, schedule, gutenberg
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -131,6 +131,11 @@ Yes! The plugin includes REST API endpoints at `/wp-json/ventocalendar/v1/events
 
 == Changelog ==
 
+= 1.1.2 =
+* Fix: Resolved timezone-related date offset in Add to Calendar URL generation
+* Tweak: Minor CSS improvements
+* Tweak: Minor adjustment to calendar bars positioning
+
 = 1.1.1 =
 * Regenerated POT file.
 
@@ -159,6 +164,9 @@ Yes! The plugin includes REST API endpoints at `/wp-json/ventocalendar/v1/events
 * Internationalization support
 
 == Upgrade Notice ==
+
+= 1.1.2 =
+* Fixed timezone-related date offset in Add to calendar URL generation, minor CSS improvements and minor adjustment to calendar bars positioning.
 
 = 1.1.1 =
 * Regenerated POT file.

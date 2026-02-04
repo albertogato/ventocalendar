@@ -714,29 +714,37 @@
 					'https://calendar.google.com/calendar/render?action=TEMPLATE';
 				const text = encodeURIComponent( title );
 				const formatDateTime = ( date, time, isEndDate = false ) => {
-					const d = new Date( date );
-					const year = d.getFullYear();
-					const month = String( d.getMonth() + 1 ).padStart( 2, '0' );
-					const day = String( d.getDate() ).padStart( 2, '0' );
+					const [ year, month, day ] = date
+						.split( '-' )
+						.map( Number );
+					const d = new Date( year, month - 1, day );
 
 					if ( time ) {
 						const [ hours, minutes ] = time.split( ':' );
 
-						return `${ year }${ month }${ day }T${ hours }${ minutes }00`;
-					}
-					if ( isEndDate ) {
-						d.setDate( d.getDate() + 1 );
-						const newYear = d.getFullYear();
-						const newMonth = String( d.getMonth() + 1 ).padStart(
+						return `${ year }${ String( month ).padStart(
 							2,
 							'0'
-						);
-						const newDay = String( d.getDate() ).padStart( 2, '0' );
-
-						return `${ newYear }${ newMonth }${ newDay }`;
+						) }${ String( day ).padStart(
+							2,
+							'0'
+						) }T${ hours }${ minutes }00`;
 					}
 
-					return `${ year }${ month }${ day }`;
+					if ( isEndDate ) {
+						d.setDate( d.getDate() + 1 );
+						return `${ d.getFullYear() }${ String(
+							d.getMonth() + 1
+						).padStart( 2, '0' ) }${ String( d.getDate() ).padStart(
+							2,
+							'0'
+						) }`;
+					}
+
+					return `${ year }${ String( month ).padStart(
+						2,
+						'0'
+					) }${ String( day ).padStart( 2, '0' ) }`;
 				};
 
 				const start = formatDateTime( start_date, start_time );
@@ -766,17 +774,26 @@
 				end_time = null,
 			} ) {
 				const formatICSDateTime = ( date, time ) => {
-					const d = new Date( date );
-					const year = d.getFullYear();
-					const month = String( d.getMonth() + 1 ).padStart( 2, '0' );
-					const day = String( d.getDate() ).padStart( 2, '0' );
+					const [ year, month, day ] = date
+						.split( '-' )
+						.map( Number );
+					const d = new Date( year, month - 1, day );
+					const formattedYear = d.getFullYear();
+					const formattedMonth = String( d.getMonth() + 1 ).padStart(
+						2,
+						'0'
+					);
+					const formattedDay = String( d.getDate() ).padStart(
+						2,
+						'0'
+					);
 
 					if ( time ) {
 						const [ hours, minutes ] = time.split( ':' );
 
-						return `${ year }${ month }${ day }T${ hours }${ minutes }00`;
+						return `${ formattedYear }${ formattedMonth }${ formattedDay }T${ hours }${ minutes }00`;
 					}
-					return `${ year }${ month }${ day }`;
+					return `${ formattedYear }${ formattedMonth }${ formattedDay }`;
 				};
 
 				const dtstart = formatICSDateTime( start_date, start_time );
@@ -924,14 +941,14 @@
 
 	                        <div class="week-event-bars" v-if="getEventBarsForWeek(week).length > 0">
 	                            <div
-	                                v-for="(bar, barIndex) in getEventBarsForWeek(week).slice(0, 3)"
+	                                v-for="(bar, barIndex) in getEventBarsForWeek(week)"
 	                                :key="bar.event.id + '-' + weekIndex"
 	                                class="event-bar"
 	                                :style="{
 	                                    backgroundColor: bar.event.color,
 	                                    left: 'calc(' + ((bar.startIndex * 100) / 7) + '%)',
 	                                    width: 'calc(' + ((bar.span * 100) / 7) + '%)',
-	                                    bottom: 'calc(' + (barIndex * barSpacing) + 'px + ' + barsOffset + 'px)'
+	                                    bottom: 'calc(' + ((barIndex % 3) * barSpacing) + 'px + ' + barsOffset + 'px)'
 	                                }"
 	                                :title="bar.event.title"
 	                            >

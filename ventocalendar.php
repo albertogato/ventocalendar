@@ -14,7 +14,7 @@
  * Plugin Name:       VentoCalendar
  * Plugin URI:
  * Description:       A lightweight and intuitive events calendar plugin for WordPress.
- * Version:           1.1.1
+ * Version:           1.1.2
  * Author:            Alberto Gato Otero (albertogato)
  * Author URI:        https://profiles.wordpress.org/albertogato/
  * License:           GPL-2.0+
@@ -45,7 +45,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'VENTOCALENDAR_VERSION', '1.1.0' );
+define( 'VENTOCALENDAR_VERSION', '1.1.2' );
 
 /**
  * Define the plugin base path and URL.
