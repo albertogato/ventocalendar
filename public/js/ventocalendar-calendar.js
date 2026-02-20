@@ -188,17 +188,17 @@
 				if ( this.windowWidth <= 480 ) {
 					return 6 + 1;
 				} else if ( this.windowWidth <= 768 ) {
-					return 12 + 2;
+					return 12 + 1;
 				}
-				return 20 + 2;
+				return 20 + 1;
 			},
 			barsOffset() {
 				if ( this.windowWidth <= 480 ) {
 					return 4;
 				} else if ( this.windowWidth <= 768 ) {
-					return 10;
+					return 4;
 				}
-				return 14;
+				return 6;
 			},
 
 			weekDays() {
@@ -476,18 +476,28 @@
 
 			getEventsForDate( date ) {
 				const dateStr = this.formatDate( date );
-				return this.events.filter( ( event ) => {
-					const startDate = event.start_date;
-					const endDate = event.end_date;
+				return this.events
+					.filter( ( event ) => {
+						const startDate = event.start_date;
+						const endDate = event.end_date;
 
-					// If no end_date, event only appears on start_date.
-					if ( ! endDate ) {
-						return dateStr === startDate;
-					}
+						// If no end_date, event only appears on start_date.
+						if ( ! endDate ) {
+							return dateStr === startDate;
+						}
 
-					// If has end_date, check if date is within range.
-					return dateStr >= startDate && dateStr <= endDate;
-				} );
+						// If has end_date, check if date is within range.
+						return dateStr >= startDate && dateStr <= endDate;
+					} )
+					.sort( ( a, b ) => {
+						if ( a.start_time < b.start_time ) {
+							return -1;
+						}
+						if ( a.start_time > b.start_time ) {
+							return 1;
+						}
+						return 0;
+					} );
 			},
 
 			getEventBarsForWeek( week ) {
@@ -547,11 +557,65 @@
 							startIndex: firstDayIndex,
 							endIndex: lastDayIndex,
 							span: lastDayIndex - firstDayIndex + 1,
+							position: 0,
 						};
 					} )
 					.filter( ( bar ) => bar !== null );
 
+				return this.calculateBarPositions( bars );
+			},
+
+			calculateBarPositions( bars ) {
+				const sortedBars = [ ...bars ].sort( ( a, b ) => {
+					if ( a.event.start_date < b.event.start_date ) {
+						return -1;
+					}
+					if ( a.event.start_date > b.event.start_date ) {
+						return 1;
+					}
+					return a.event.end_date - b.event.end_date;
+				} );
+
+				for ( let i = 0; i < sortedBars.length; i++ ) {
+					const currentBar = sortedBars[ i ];
+
+					// Find previous bars overlapping current bar.
+					const overlappingBars = sortedBars
+						.slice( 0, i )
+						.filter( ( bar ) =>
+							this.eventsOverlap( bar.event, currentBar.event )
+						);
+
+					// Find minimum position available.
+					const usedPositions = new Set(
+						overlappingBars.map( ( bar ) => bar.position )
+					);
+					let position = 0;
+					while ( usedPositions.has( position ) ) {
+						position++;
+					}
+
+					currentBar.position = position;
+				}
+
 				return bars;
+			},
+
+			eventsOverlap( a, b ) {
+				return a.start_date <= b.end_date && b.start_date <= a.end_date;
+			},
+
+			maxBarPositionForWeek( week ) {
+				const bars = this.getEventBarsForWeek( week );
+				let maxPosition = 0;
+
+				for ( let i = 0; i < bars.length; i++ ) {
+					if ( bars[ i ].position > maxPosition ) {
+						maxPosition = bars[ i ].position;
+					}
+				}
+
+				return maxPosition;
 			},
 
 			getEventsForCurrentMonth() {
@@ -911,7 +975,6 @@
 	                            {{ day }}
 	                        </div>
 	                    </div>
-
 	                    <div v-for="(week, weekIndex) in weeks" :key="weekIndex" class="calendar-week">
 	                        <div class="week-days">
 	                            <div
@@ -923,6 +986,16 @@
 	                                    { 'today': isToday(day.date) }
 	                                ]"
 	                                @click="handleDayClick(day.date)"
+									:data-num-bars="maxBarPositionForWeek(week)"
+									:style="{
+										minHeight:
+											'calc(var(--ventocalendar-day-min-height) + ' +
+											(
+												( maxBarPositionForWeek(week) + 1 ) * barSpacing +
+												( windowWidth > 768 ? ( getEventsForDate(day.date).filter(e => !e.end_date).length - 1 ) * barSpacing : 0 )
+											) +
+											'px)'
+									}"
 	                            >
 	                                <div class="day-number">{{ day.date.getDate() }}</div>
 	                                <div class="day-events">
@@ -948,7 +1021,7 @@
 	                                    backgroundColor: bar.event.color,
 	                                    left: 'calc(' + ((bar.startIndex * 100) / 7) + '%)',
 	                                    width: 'calc(' + ((bar.span * 100) / 7) + '%)',
-	                                    bottom: 'calc(' + ((barIndex % 3) * barSpacing) + 'px + ' + barsOffset + 'px)'
+	                                    bottom: 'calc(' + (bar.position * barSpacing) + 'px + ' + barsOffset + 'px)'
 	                                }"
 	                                :title="bar.event.title"
 	                            >
