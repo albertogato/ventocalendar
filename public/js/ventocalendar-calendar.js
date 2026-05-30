@@ -192,14 +192,6 @@
 				}
 				return 20 + 1;
 			},
-			barsOffset() {
-				if ( this.windowWidth <= 480 ) {
-					return 4;
-				} else if ( this.windowWidth <= 768 ) {
-					return 4;
-				}
-				return 6;
-			},
 
 			weekDays() {
 				if ( this.firstDayOfWeek === 'monday' ) {
@@ -988,13 +980,10 @@
 	                                @click="handleDayClick(day.date)"
 									:data-num-bars="maxBarPositionForWeek(week)"
 									:style="{
-										minHeight:
-											'calc(var(--ventocalendar-day-min-height) + ' +
-											(
-												( maxBarPositionForWeek(week) + 1 ) * barSpacing +
-												( windowWidth > 768 ? ( getEventsForDate(day.date).filter(e => !e.end_date).length - 1 ) * barSpacing : 0 )
-											) +
-											'px)'
+										minHeight: 'calc(' +
+										'var(--ventocalendar-day-min-height) + ' + ( maxBarPositionForWeek(week) + 1 ) + ' * var(--ventocalendar-event-bar-height) + ' +
+										( windowWidth > 768 ? ( getEventsForDate(day.date).filter(e => !e.end_date).length - 1 ) : 0 ) + ' * var(--ventocalendar-event-bar-height)' +
+										')'
 									}"
 	                            >
 	                                <div class="day-number">{{ day.date.getDate() }}</div>
@@ -1021,7 +1010,7 @@
 	                                    backgroundColor: bar.event.color,
 	                                    left: 'calc(' + ((bar.startIndex * 100) / 7) + '%)',
 	                                    width: 'calc(' + ((bar.span * 100) / 7) + '%)',
-	                                    bottom: 'calc(' + (bar.position * barSpacing) + 'px + ' + barsOffset + 'px)'
+	                                    bottom: 'calc(' + bar.position + ' * var(--ventocalendar-event-bar-height) + var(--ventocalendar-event-bar-offset))'
 	                                }"
 	                                :title="bar.event.title"
 	                            >

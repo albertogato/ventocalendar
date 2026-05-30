@@ -5,7 +5,7 @@ A lightweight and intuitive events calendar plugin for WordPress.
 Official development repository for the WordPress plugin:  
 https://wordpress.org/plugins/ventocalendar/
 
-Current stable version: **1.1.4**
+Current stable version: **1.2.0**
 
 ## About
 

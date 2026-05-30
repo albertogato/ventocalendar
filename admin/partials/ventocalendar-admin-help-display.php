@@ -63,6 +63,9 @@ function ventocalendar_tab_link( $tab ) {
 		<a href="<?php echo esc_url( ventocalendar_tab_link( 'shortcodes' ) ); ?>" class="nav-tab <?php echo 'shortcodes' === $ventocalendar_help_usage_active_tab ? 'nav-tab-active' : ''; ?>">
 			<?php esc_html_e( 'Shortcodes', 'ventocalendar' ); ?>
 		</a>
+		<a href="<?php echo esc_url( ventocalendar_tab_link( 'custom-css' ) ); ?>" class="nav-tab <?php echo 'custom-css' === $ventocalendar_help_usage_active_tab ? 'nav-tab-active' : ''; ?>">
+			<?php esc_html_e( 'Custom CSS', 'ventocalendar' ); ?>
+		</a>
 	</h2>
 
 	<div class="tab-content" style="margin-top: 20px;">
@@ -198,7 +201,7 @@ function ventocalendar_tab_link( $tab ) {
 					</ol>
 
 					<h4><?php esc_html_e( 'Block settings', 'ventocalendar' ); ?></h4>
-					<table class="widefat" style="max-width: 800px; margin-top: 20px;">
+					<table class="widefat" style="margin-top: 20px;">
 						<thead>
 							<tr>
 								<th style="width: 30%;"><?php esc_html_e( 'Setting', 'ventocalendar' ); ?></th>
@@ -291,7 +294,7 @@ function ventocalendar_tab_link( $tab ) {
 					</ol>
 
 					<h4><?php esc_html_e( 'Block settings', 'ventocalendar' ); ?></h4>
-					<table class="widefat" style="max-width: 800px; margin-top: 20px;">
+					<table class="widefat" style="margin-top: 20px;">
 						<thead>
 							<tr>
 								<th style="width: 30%;"><?php esc_html_e( 'Setting', 'ventocalendar' ); ?></th>
@@ -366,7 +369,7 @@ function ventocalendar_tab_link( $tab ) {
 
 					<h4><?php esc_html_e( 'Available shortcodes', 'ventocalendar' ); ?></h4>
 
-					<table class="widefat" style="max-width: 800px; margin-top: 20px;">
+					<table class="widefat" style="margin-top: 20px;">
 						<thead>
 							<tr>
 								<th style="width: 40%;"><?php esc_html_e( 'Shortcode', 'ventocalendar' ); ?></th>
@@ -491,7 +494,7 @@ function ventocalendar_tab_link( $tab ) {
 
 					<h4><?php esc_html_e( 'Shortcode parameters', 'ventocalendar' ); ?></h4>
 
-					<table class="widefat" style="max-width: 800px; margin-top: 20px;">
+					<table class="widefat" style="margin-top: 20px;">
 						<thead>
 							<tr>
 								<th style="width: 25%;"><?php esc_html_e( 'Parameter', 'ventocalendar' ); ?></th>
@@ -631,6 +634,86 @@ function ventocalendar_tab_link( $tab ) {
 				</div>
 			</div>
 
+		<?php elseif ( 'custom-css' === $ventocalendar_help_usage_active_tab ) : ?>
+			<!-- Custom CSS Tab -->
+			<div class="ventocalendar-help-section">
+				<h2><?php esc_html_e( 'Custom CSS', 'ventocalendar' ); ?></h2>
+
+				<p class="description" style="font-size: 15px;">
+					<?php esc_html_e( 'Use these CSS variables to customize the appearance of the calendar. Override any of them in VentoCalendar > Settings with the Custom CSS field to change colors, typography, and layout without modifying the plugin files.', 'ventocalendar' ); ?>
+				</p>
+
+				<hr style="margin: 30px 0;">
+
+				<!-- Event Information Shortcodes -->
+				<div style="background: #fff; border: 1px solid #ddd; padding: 20px; margin: 20px 0;">
+					<h3 style="margin-top: 0;">
+						<span class="dashicons dashicons-admin-settings" style="color: #2271b1;"></span>
+						<?php esc_html_e( 'CSS variables', 'ventocalendar' ); ?>
+					</h3>
+
+					<table class="widefat" style="margin-top: 20px;">
+						<thead>
+							<tr>
+								<th style="width: 30%;"><?php esc_html_e( 'Variable', 'ventocalendar' ); ?></th>
+								<th style="width: 30%;"><?php esc_html_e( 'Default value', 'ventocalendar' ); ?></th>
+								<th style="width: 40%;"><?php esc_html_e( 'Description', 'ventocalendar' ); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php
+							$variables = array(
+								// Colors.
+								array( '--ventocalendar-bg', '#fff', __( 'Main background color of the calendar', 'ventocalendar' ) ),
+								array( '--ventocalendar-button-bg', '#fff', __( 'Background color of navigation buttons', 'ventocalendar' ) ),
+								array( '--ventocalendar-button-bg-hover', '#f9fafb', __( 'Background color of navigation buttons on hover', 'ventocalendar' ) ),
+								array( '--ventocalendar-button-border', '#d1d5db', __( 'Border color of navigation buttons', 'ventocalendar' ) ),
+								array( '--ventocalendar-button-border-hover', '#9ca3af', __( 'Border color of navigation buttons on hover', 'ventocalendar' ) ),
+								array( '--ventocalendar-separator', '#e5e7eb', __( 'Color of separator lines', 'ventocalendar' ) ),
+								array( '--ventocalendar-text', '#1f2937', __( 'Main text color', 'ventocalendar' ) ),
+								array( '--ventocalendar-text-secondary', '#6b7280', __( 'Secondary text color (e.g. weekday labels)', 'ventocalendar' ) ),
+								array( '--ventocalendar-text-highlight', '#2271b1', __( 'Highlight/accent color (e.g. current day)', 'ventocalendar' ) ),
+								array( '--ventocalendar-day-bg-secondary', '#f9fafb', __( 'Background color for days outside the current month', 'ventocalendar' ) ),
+								array( '--ventocalendar-box-bg', '#f8f9fa', __( 'Background color for info boxes', 'ventocalendar' ) ),
+								// Typography.
+								array( '--ventocalendar-font', '-apple-system, "BlinkMacSystemFont", …', __( 'Font family used throughout the calendar', 'ventocalendar' ) ),
+								array( '--ventocalendar-font-size-l', '1.5rem', __( 'Large font size', 'ventocalendar' ) ),
+								array( '--ventocalendar-font-size-m', '1rem', __( 'Medium font size', 'ventocalendar' ) ),
+								array( '--ventocalendar-font-size-s', '0.875rem', __( 'Small font size', 'ventocalendar' ) ),
+								array( '--ventocalendar-font-size-xs', '0.75rem', __( 'Extra small font size', 'ventocalendar' ) ),
+								array( '--ventocalendar-font-size-month-year', 'var(--ventocalendar-font-size-l)', __( 'Font size of the month/year heading', 'ventocalendar' ) ),
+								array( '--ventocalendar-font-size-button', 'var(--ventocalendar-font-size-s)', __( 'Font size of navigation buttons', 'ventocalendar' ) ),
+								array( '--ventocalendar-font-size-weekday', 'var(--ventocalendar-font-size-s)', __( 'Font size of weekday labels', 'ventocalendar' ) ),
+								array( '--ventocalendar-font-size-day-number', 'var(--ventocalendar-font-size-s)', __( 'Font size of day numbers', 'ventocalendar' ) ),
+								array( '--ventocalendar-font-size-event-time', 'var(--ventocalendar-font-size-xs)', __( 'Font size of event time in the grid', 'ventocalendar' ) ),
+								array( '--ventocalendar-font-size-event-bar', 'var(--ventocalendar-font-size-xs)', __( 'Font size of event bar labels', 'ventocalendar' ) ),
+								array( '--ventocalendar-font-size-modal-header', 'var(--ventocalendar-font-size-l)', __( 'Font size of the modal header', 'ventocalendar' ) ),
+								array( '--ventocalendar-font-size-modal-event-title', 'var(--ventocalendar-font-size-s)', __( 'Font size of event titles in the modal', 'ventocalendar' ) ),
+								array( '--ventocalendar-font-size-modal-event-meta', 'var(--ventocalendar-font-size-s)', __( 'Font size of event metadata in the modal', 'ventocalendar' ) ),
+								array( '--ventocalendar-font-modal-event-link', 'var(--ventocalendar-font-size-s)', __( 'Font size of event links in the modal', 'ventocalendar' ) ),
+								array( '--ventocalendar-font-size-modal-add-to-my-calendar-label', 'var(--ventocalendar-font-size-xs)', __( 'Font size of the "Add to my calendar" label', 'ventocalendar' ) ),
+								array( '--ventocalendar-font-size-modal-add-to-my-calendar-buttons', 'var(--ventocalendar-font-size-s)', __( 'Font size of the "Add to my calendar" buttons', 'ventocalendar' ) ),
+								// Layout.
+								array( '--ventocalendar-day-min-height', '56px', __( 'Minimum height of each day cell', 'ventocalendar' ) ),
+								array( '--ventocalendar-font-size-event-dot', '8px', __( 'Size of the event dot indicator', 'ventocalendar' ) ),
+								array( '--ventocalendar-event-bar-height', '21px', __( 'Height of event bars in the grid', 'ventocalendar' ) ),
+								array( '--ventocalendar-event-bar-offset', '6px', __( 'Vertical offset between stacked event bars', 'ventocalendar' ) ),
+							);
+
+							foreach ( $variables as $var ) :
+								?>
+								<tr>
+									<td><code><?php echo esc_html( $var[0] ); ?></code></td>
+									<td><code><?php echo esc_html( $var[1] ); ?></code></td>
+									<td><?php echo esc_html( $var[2] ); ?></td>
+								</tr>
+								<?php
+							endforeach;
+							?>
+						</tbody>
+					</table>
+				</div>
+			</div>
 		<?php endif; ?>
 	</div>
 </div>

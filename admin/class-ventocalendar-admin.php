@@ -176,6 +176,24 @@ class VentoCalendar_Admin {
 			$this->plugin_name . '_general',
 			array( 'label_for' => 'show_end_time' )
 		);
+
+		// Add settings section for Custom CSS.
+		add_settings_section(
+			$this->plugin_name . '_custom_css',
+			__( 'Custom CSS', 'ventocalendar' ),
+			array( $this, 'render_custom_css_section' ),
+			'ventocalendar-settings'
+		);
+
+		// Add custom CSS field.
+		add_settings_field(
+			'custom_css',
+			__( 'Custom CSS', 'ventocalendar' ),
+			array( $this, 'render_custom_css_field' ),
+			'ventocalendar-settings',
+			$this->plugin_name . '_custom_css',
+			array( 'label_for' => 'custom_css' )
+		);
 	}
 
 	/**
@@ -248,6 +266,38 @@ class VentoCalendar_Admin {
 	}
 
 	/**
+	 * Render the custom CSS section description.
+	 *
+	 * @since    1.0.0
+	 */
+	public function render_custom_css_section() {
+		echo '<p>' . esc_html__( 'Add custom CSS to style the calendar and event information.', 'ventocalendar' ) . '</p>';
+	}
+
+	/**
+	 * Render the custom CSS textarea field.
+	 *
+	 * @since    1.0.0
+	 */
+	public function render_custom_css_field() {
+		$options = get_option( $this->plugin_name, array() );
+		$value   = isset( $options['custom_css'] ) ? $options['custom_css'] : '';
+		?>
+		<textarea
+			id="custom_css"
+			name="<?php echo esc_attr( $this->plugin_name ); ?>[custom_css]"
+			rows="10"
+			cols="50"
+			class="large-text code"
+			placeholder="<?php esc_attr_e( '/* Add your custom CSS here */', 'ventocalendar' ); ?>"
+		><?php echo esc_textarea( $value ); ?></textarea>
+		<p class="description">
+			<?php esc_html_e( 'A list of available CSS variables can be found in VentoCalendar > Usage / Help > Custom CSS.', 'ventocalendar' ); ?>
+		</p>
+		<?php
+	}
+
+	/**
 	 * Validate settings before saving.
 	 *
 	 * @since    1.0.0
@@ -259,6 +309,7 @@ class VentoCalendar_Admin {
 			'show_event_info_automatically' => 0,
 			'show_start_time'               => 0,
 			'show_end_time'                 => 0,
+			'custom_css'                    => '',
 		);
 
 		if ( ! is_array( $input ) ) {
@@ -268,10 +319,15 @@ class VentoCalendar_Admin {
 		// Normalize values.
 		$valid = $defaults;
 
-		foreach ( $defaults as $key => $default ) {
+		foreach ( array( 'show_event_info_automatically', 'show_start_time', 'show_end_time' ) as $key ) {
 			if ( isset( $input[ $key ] ) && '1' === (string) $input[ $key ] ) {
 				$valid[ $key ] = 1;
 			}
+		}
+
+		// Sanitize custom CSS (strip PHP tags, allow CSS content).
+		if ( isset( $input['custom_css'] ) ) {
+			$valid['custom_css'] = wp_strip_all_tags( $input['custom_css'] );
 		}
 
 		return $valid;

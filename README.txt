@@ -2,8 +2,8 @@
 Contributors: albertogato
 Tags: events, calendar, event calendar, schedule, gutenberg
 Requires at least: 5.0
-Tested up to: 6.9
-Stable tag: 1.1.4
+Tested up to: 7.0
+Stable tag: 1.2.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -131,6 +131,10 @@ Yes! The plugin includes REST API endpoints at `/wp-json/ventocalendar/v1/events
 
 == Changelog ==
 
+= 1.2.0 =
+* Feature: Added Custom CSS field in Settings to allow custom styles without modifying plugin files.
+* Tweak: Minor CSS improvements.
+
 = 1.1.4 =
 * Improvement: modified algorithm that calculates event positions in the calendar
 
@@ -171,6 +175,9 @@ Yes! The plugin includes REST API endpoints at `/wp-json/ventocalendar/v1/events
 * Internationalization support
 
 == Upgrade Notice ==
+
+= 1.2.0 =
+* Added Custom CSS field in Settings to allow custom styles without modifying plugin files.
 
 = 1.1.4 =
 * Modified algorithm that calculates event positions in the calendar

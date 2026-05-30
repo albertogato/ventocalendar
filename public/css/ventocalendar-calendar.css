@@ -14,13 +14,30 @@
 	--ventocalendar-text-highlight: #2271b1;
 	--ventocalendar-day-bg-secondary: #f9fafb;
 	--ventocalendar-box-bg: #f8f9fa;
-	--ventocalendar-box-bg-hover: #f3f4f6;
+
 	--ventocalendar-font: -apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen-Sans", "Ubuntu", "Cantarell", "Helvetica Neue", sans-serif;
 	--ventocalendar-font-size-l: 1.5rem;
 	--ventocalendar-font-size-m: 1rem;
 	--ventocalendar-font-size-s: 0.875rem;
 	--ventocalendar-font-size-xs: 0.75rem;
+
+	--ventocalendar-font-size-month-year: var(--ventocalendar-font-size-l);
+	--ventocalendar-font-size-button: var(--ventocalendar-font-size-s);
+	--ventocalendar-font-size-weekday: var(--ventocalendar-font-size-s);
+	--ventocalendar-font-size-day-number: var(--ventocalendar-font-size-s);
+	--ventocalendar-font-size-event-time: var(--ventocalendar-font-size-xs);
+	--ventocalendar-font-size-event-bar: var(--ventocalendar-font-size-xs);
+	--ventocalendar-font-size-modal-header: var(--ventocalendar-font-size-l);
+	--ventocalendar-font-size-modal-event-title: var(--ventocalendar-font-size-s);
+	--ventocalendar-font-size-modal-event-meta: var(--ventocalendar-font-size-s);
+	--ventocalendar-font-modal-event-link: var(--ventocalendar-font-size-s);
+	--ventocalendar-font-size-modal-add-to-my-calendar-label: var(--ventocalendar-font-size-xs);
+	--ventocalendar-font-size-modal-add-to-my-calendar-buttons: var(--ventocalendar-font-size-s);
+
 	--ventocalendar-day-min-height: 56px;
+	--ventocalendar-font-size-event-dot: 8px;
+	--ventocalendar-event-bar-height: 21px;
+	--ventocalendar-event-bar-offset: 6px;
 }
 
 .ventocalendar-calendar {
@@ -56,7 +73,7 @@
 
 .ventocalendar-calendar .calendar-header .month-year {
 	margin: 0;
-	font-size: var(--ventocalendar-font-size-l);
+	font-size: var(--ventocalendar-font-size-month-year);
 	font-weight: 600;
 	color: var(--ventocalendar-text);
 	flex: 1;
@@ -71,7 +88,7 @@
 	border-radius: 6px;
 	cursor: pointer;
 	transition: all 0.2s ease;
-	font-size: var(--ventocalendar-font-size-s);
+	font-size: var(--ventocalendar-font-size-button);
 	font-weight: 500;
 	color: var(--ventocalendar-text);
 }
@@ -140,7 +157,7 @@
 	padding: 0.75rem;
 	text-align: center;
 	font-weight: 600;
-	font-size: var(--ventocalendar-font-size-s);
+	font-size: var(--ventocalendar-font-size-weekday);
 	color: var(--ventocalendar-text-secondary);
 	text-transform: uppercase;
 	letter-spacing: 0.05em;
@@ -185,7 +202,7 @@
 }
 
 .ventocalendar-calendar .day-number {
-	font-size: var(--ventocalendar-font-size-s);
+	font-size: var(--ventocalendar-font-size-day-number);
 	font-weight: 600;
 	color: var(--ventocalendar-text);
 	margin-bottom: 0.25rem;
@@ -209,13 +226,12 @@
 	display: flex;
 	align-items: center;
 	gap: 4px;
-	font-size: var(--ventocalendar-font-size-xs);
 	line-height: 1;
 }
 
 .ventocalendar-calendar .event-dot {
-	width: 8px;
-	height: 8px;
+	width: var(--ventocalendar-font-size-event-dot);
+	height: var(--ventocalendar-font-size-event-dot);
 	border-radius: 50%;
 	flex-shrink: 0;
 	display: inline-block;
@@ -223,6 +239,7 @@
 
 .ventocalendar-calendar .event-time {
 	color: var(--ventocalendar-text-secondary);
+	font-size: var(--ventocalendar-font-size-event-time);
 	font-weight: 500;
 	white-space: nowrap;
 }
@@ -240,12 +257,12 @@
 
 .ventocalendar-calendar .event-bar {
 	position: absolute;
-	height: 20px;
+	height: calc(var(--ventocalendar-event-bar-height) - 1px);
 	border-radius: 4px;
 	display: flex;
 	align-items: center;
 	padding: 0 8px;
-	font-size: var(--ventocalendar-font-size-xs);
+	font-size: var(--ventocalendar-font-size-event-bar);
 	font-weight: 500;
 	color: var(--ventocalendar-bg);
 	cursor: default;
@@ -297,7 +314,7 @@
 
 .ventocalendar-calendar .modal-header h3 {
 	margin: 0;
-	font-size: var(--ventocalendar-font-size-l);
+	font-size: var(--ventocalendar-font-size-modal-header);
 	font-weight: 600;
 	color: var(--ventocalendar-text);
 }
@@ -341,6 +358,9 @@
 	background: var(--ventocalendar-box-bg);
 	transition: background-color 0.2s ease;
 	border-left: 8px solid;
+	border-right: 0 none;
+	border-top: 0 none;
+	border-bottom: 0 none;
 }
 
 .ventocalendar-calendar .event-item:last-child {
@@ -365,7 +385,7 @@
 
 .ventocalendar-calendar .event-title {
 	font-weight: 600;
-	font-size: var(--ventocalendar-font-size-m);
+	font-size: var(--ventocalendar-font-size-modal-event-title);
 	color: var(--ventocalendar-text);
 	margin-bottom: 0.5rem;
 	transition: color 0.2s ease;
@@ -383,7 +403,7 @@
 
 .ventocalendar-calendar .event-actions .event-link a {
 	text-decoration: none;
-	font-size: var(--ventocalendar-font-size-s);
+	font-size: var(--ventocalendar-font-modal-event-link);
 	font-weight: 500;
 	color: var(--ventocalendar-text);
 	transition: all 0.2s ease;
@@ -391,7 +411,7 @@
 
 .ventocalendar-calendar .event-actions .event-add-to-my-calendar-buttons a {
 	text-decoration: none;
-	font-size: var(--ventocalendar-font-size-xs);
+	font-size: var(--ventocalendar-font-size-modal-add-to-my-calendar-buttons);
 	font-weight: 500;
 }
 
@@ -407,7 +427,7 @@
 }
 
 .ventocalendar-calendar .event-actions .event-add-to-my-calendar-buttons span {
-	font-size: var(--ventocalendar-font-size-xs);
+	font-size: var(--ventocalendar-font-size-modal-add-to-my-calendar-label);
 }
 
 .ventocalendar-calendar .event-actions .event-add-to-my-calendar-buttons a:hover {
@@ -416,7 +436,7 @@
 
 .ventocalendar-calendar .event-meta {
 	margin-top: 0.5rem;
-	font-size: var(--ventocalendar-font-size-s);
+	font-size: var(--ventocalendar-font-size-modal-event-meta);
 	color: var(--ventocalendar-text-secondary);
 }
 
@@ -451,6 +471,9 @@
 		--ventocalendar-font-size-s: 0.75rem;
 		--ventocalendar-font-size-xs: 0.6rem;
 		--ventocalendar-day-min-height: 48px;
+		--ventocalendar-event-bar-height: 13px;
+		--ventocalendar-event-bar-offset: 4px;
+		--ventocalendar-font-size-event-dot: 6px;
 	}
 
 	.ventocalendar-calendar {
@@ -461,11 +484,6 @@
 	.ventocalendar-calendar .calendar-day {
 		padding: 0.25rem;
 		padding-bottom: 2rem;
-	}
-
-	.ventocalendar-calendar .event-dot {
-		width: 6px;
-		height: 6px;
 	}
 
 	.ventocalendar-calendar .event-time {
@@ -484,9 +502,7 @@
 
 	.ventocalendar-calendar .event-bar {
 		font-size: 0;
-		height: 12px;
 		padding: 0 2px;
-		min-height: 12px;
 	}
 
 	.ventocalendar-calendar .event-bar-title {
@@ -518,6 +534,9 @@
 		--ventocalendar-font-size-s: 0.65rem;
 		--ventocalendar-font-size-xs: 0.55rem;
 		--ventocalendar-day-min-height: 40px;
+		--ventocalendar-event-bar-height: 7px;
+		--ventocalendar-event-bar-offset: 4px;
+		--ventocalendar-font-size-event-dot: 5px;
 	}
 
 	.ventocalendar-calendar .calendar-header {
@@ -537,20 +556,13 @@
 		gap: 3px;
 	}
 
-	.ventocalendar-calendar .event-dot {
-		width: 5px;
-		height: 5px;
-	}
-
 	.ventocalendar-calendar .week-event-bars {
 		height: 25px;
 		margin-top: -25px;
 	}
 
 	.ventocalendar-calendar .event-bar {
-		height: 6px;
 		font-size: 0;
-		min-height: 6px;
 		padding: 0;
 		border-radius: 2px;
 	}

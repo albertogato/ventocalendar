@@ -64,6 +64,9 @@ class VentoCalendar_Public {
 
 		$css_file = VENTOCALENDAR_CORE_PATH . 'public/css/ventocalendar-public.css';
 		wp_enqueue_style( $this->plugin_name, VENTOCALENDAR_CORE_URL . 'public/css/ventocalendar-public.css', array(), filemtime( $css_file ), 'all' );
+
+		// Append custom CSS after the plugin stylesheet.
+		$this->output_custom_css();
 	}
 
 	/**
@@ -240,5 +243,19 @@ class VentoCalendar_Public {
 
 		// Add the dates to the beginning of the content.
 		return $dates_html . $content;
+	}
+
+	/**
+	 * Output custom CSS.
+	 *
+	 * @since    1.0.0
+	 */
+	public function output_custom_css() {
+		$options    = get_option( $this->plugin_name, array() );
+		$custom_css = isset( $options['custom_css'] ) ? trim( $options['custom_css'] ) : '';
+
+		if ( ! empty( $custom_css ) ) {
+			wp_add_inline_style( $this->plugin_name, wp_strip_all_tags( $custom_css ) );
+		}
 	}
 }

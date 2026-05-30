@@ -5,6 +5,9 @@
 .ventocalendar-date-info {
 	background: #f8f9fa;
 	border-left: 8px solid #2271b1;
+	border-right: 0 none;
+	border-top: 0 none;
+	border-bottom: 0 none;
 	padding: 1rem 1.25rem;
 	margin: 0 0 2rem 0;
 	font-size: 1rem;
