@@ -24,6 +24,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 class VentoCalendar_Shortcodes {
 
 	/**
+	 * Plugin name.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      string
+	 */
+	private $plugin_name;
+
+	/**
+	 * Initialize shortcodes class.
+	 *
+	 * @since    1.0.0
+	 * @param    string $plugin_name Plugin name.
+	 */
+	public function __construct( $plugin_name = 'ventocalendar' ) {
+		$this->plugin_name = $plugin_name;
+	}
+
+	/**
 	 * Register all shortcodes.
 	 *
 	 * @since    1.0.0
@@ -33,6 +52,9 @@ class VentoCalendar_Shortcodes {
 		add_shortcode( 'ventocalendar-end-date', array( $this, 'end_date_shortcode' ) );
 		add_shortcode( 'ventocalendar-start-time', array( $this, 'start_time_shortcode' ) );
 		add_shortcode( 'ventocalendar-end-time', array( $this, 'end_time_shortcode' ) );
+		add_shortcode( 'ventocalendar-location', array( $this, 'location_shortcode' ) );
+		add_shortcode( 'ventocalendar-address', array( $this, 'address_shortcode' ) );
+		add_shortcode( 'ventocalendar-map', array( $this, 'map_shortcode' ) );
 		add_shortcode( 'ventocalendar-calendar', array( $this, 'calendar_shortcode' ) );
 	}
 
@@ -74,6 +96,62 @@ class VentoCalendar_Shortcodes {
 	 */
 	public function end_time_shortcode() {
 		return $this->get_event_time( '_start_date', '_end_time', get_option( 'time_format' ) );
+	}
+
+	/**
+	 * Shortcode to display the event location.
+	 *
+	 * @since    1.0.0
+	 * @return   string   The event location or empty string.
+	 */
+	public function location_shortcode() {
+		return $this->get_event_text_meta( '_location' );
+	}
+
+	/**
+	 * Shortcode to display the event address.
+	 *
+	 * @since    1.0.0
+	 * @return   string   The event address or empty string.
+	 */
+	public function address_shortcode() {
+		return $this->get_event_text_meta( '_address' );
+	}
+
+	/**
+	 * Shortcode to display the event map.
+	 *
+	 * @since    1.0.0
+	 * @return   string   The map HTML or empty string.
+	 */
+	public function map_shortcode() {
+		global $post;
+
+		// Verify we're in a post.
+		if ( ! $post ) {
+			return '';
+		}
+
+		// Verify it's an 'ventocalendar_event' post type.
+		if ( 'ventocalendar_event' !== get_post_type( $post ) ) {
+			return '';
+		}
+
+		$latitude  = get_post_meta( $post->ID, '_location_latitude', true );
+		$longitude = get_post_meta( $post->ID, '_location_longitude', true );
+
+		if ( ! $this->is_valid_coordinate( $latitude, -90, 90 ) || ! $this->is_valid_coordinate( $longitude, -180, 180 ) ) {
+			return '';
+		}
+
+		$latitude  = round( (float) $latitude, 7 );
+		$longitude = round( (float) $longitude, 7 );
+
+		$map_html  = '<div class="ventocalendar-event-map-wrapper">';
+		$map_html .= '<div class="ventocalendar-event-map-view" data-latitude="' . esc_attr( $latitude ) . '" data-longitude="' . esc_attr( $longitude ) . '" aria-label="' . esc_attr__( 'Event location map', 'ventocalendar' ) . '"></div>';
+		$map_html .= '</div>';
+
+		return $map_html;
 	}
 
 	/**
@@ -164,6 +242,68 @@ class VentoCalendar_Shortcodes {
 
 		// Format and return time only.
 		return date_i18n( $format, $timestamp );
+	}
+
+	/**
+	 * Get and sanitize plain text event meta value.
+	 *
+	 * @since    1.0.0
+	 * @param    string $meta_key Meta key to retrieve.
+	 * @return   string
+	 */
+	private function get_event_text_meta( $meta_key ) {
+		$post_id = $this->get_current_event_post_id();
+
+		if ( 0 === $post_id ) {
+			return '';
+		}
+
+		$value = trim( (string) get_post_meta( $post_id, $meta_key, true ) );
+
+		if ( '' === $value ) {
+			return '';
+		}
+
+		return esc_html( $value );
+	}
+
+	/**
+	 * Get the current event post ID.
+	 *
+	 * @since    1.0.0
+	 * @return   int
+	 */
+	private function get_current_event_post_id() {
+		global $post;
+
+		if ( ! $post ) {
+			return 0;
+		}
+
+		if ( 'ventocalendar_event' !== get_post_type( $post ) ) {
+			return 0;
+		}
+
+		return (int) $post->ID;
+	}
+
+	/**
+	 * Validate coordinate value.
+	 *
+	 * @since    1.0.0
+	 * @param    mixed $value Coordinate value.
+	 * @param    float $min   Minimum accepted value.
+	 * @param    float $max   Maximum accepted value.
+	 * @return   bool
+	 */
+	private function is_valid_coordinate( $value, $min, $max ) {
+		if ( '' === (string) $value || ! is_numeric( $value ) ) {
+			return false;
+		}
+
+		$value = (float) $value;
+
+		return $value >= $min && $value <= $max;
 	}
 
 	/**
@@ -272,12 +412,16 @@ class VentoCalendar_Shortcodes {
 			'ventocalendar-calendar',
 			'ventoCalendar',
 			array(
-				'restUrl' => rest_url(),
+				'restUrl'       => rest_url(),
+				'restNamespace' => $this->plugin_name . '/v1',
 			)
 		);
 
 		// Set script translations.
 		wp_set_script_translations( 'ventocalendar-calendar', 'ventocalendar', VENTOCALENDAR_CORE_PATH . 'languages' );
+		do_action( 'ventocalendar_calendar_assets_enqueued', $this->plugin_name );
+
+		$events_endpoint = rest_url( $this->plugin_name . '/v1/events' );
 
 		// Generate unique ID for this calendar instance.
 		static $calendar_instance = 0;
@@ -305,6 +449,7 @@ class VentoCalendar_Shortcodes {
 			data-show-add-to-calendar-apple="<?php echo $show_add_to_calendar_apple ? 'true' : 'false'; ?>"
 			data-date-format="<?php echo esc_attr( $date_format ); ?>"
 			data-time-format="<?php echo esc_attr( $time_format ); ?>"
+			data-events-endpoint="<?php echo esc_url( $events_endpoint ); ?>"
 		></div>
 		<?php
 		return ob_get_clean();

@@ -126,6 +126,26 @@
 				type: Boolean,
 				default: false,
 			},
+			showCategories: {
+				type: Boolean,
+				default: false,
+			},
+			showTags: {
+				type: Boolean,
+				default: false,
+			},
+			filterCategories: {
+				type: Array,
+				default() {
+					return [];
+				},
+			},
+			filterTags: {
+				type: Array,
+				default() {
+					return [];
+				},
+			},
 			dateFormat: {
 				type: String,
 				default: 'F j, Y',
@@ -133,6 +153,10 @@
 			timeFormat: {
 				type: String,
 				default: 'g:i a',
+			},
+			eventsEndpoint: {
+				type: String,
+				default: '',
 			},
 		},
 
@@ -439,10 +463,20 @@
 
 				const start = this.formatDate( startDate );
 				const end = this.formatDate( endDate );
+				const fallbackRestUrl =
+					window.ventoCalendar && window.ventoCalendar.restUrl
+						? window.ventoCalendar.restUrl
+						: '/wp-json/';
+				const fallbackNamespace =
+					window.ventoCalendar && window.ventoCalendar.restNamespace
+						? window.ventoCalendar.restNamespace
+						: 'ventocalendar/v1';
+				const fallbackEndpoint = `${ fallbackRestUrl }${ fallbackNamespace }/events`;
+				const endpoint = this.eventsEndpoint || fallbackEndpoint;
 
 				try {
 					const response = await fetch(
-						`${ window.ventoCalendar.restUrl }ventocalendar/v1/events?start=${ start }&end=${ end }`,
+						`${ endpoint }?start=${ start }&end=${ end }`,
 						{
 							headers: {
 								'Content-Type': 'application/json',
@@ -454,7 +488,9 @@
 						throw new Error( 'Failed to fetch events' );
 					}
 
-					this.events = await response.json();
+					const fetchedEvents = await response.json();
+					this.events =
+						this.filterEventsByTaxonomies( fetchedEvents );
 
 					// Store the loaded range.
 					this.loadedStartDate = startDate;
@@ -759,6 +795,113 @@
 				return parts.join( ' - ' );
 			},
 
+			filterEventsByTaxonomies( events ) {
+				if ( ! Array.isArray( events ) ) {
+					return [];
+				}
+
+				const normalizedCategoryFilters = Array.isArray(
+					this.filterCategories
+				)
+					? this.filterCategories
+							.map( ( category ) =>
+								String( category || '' )
+									.trim()
+									.toLowerCase()
+							)
+							.filter( ( category ) => category.length > 0 )
+					: [];
+
+				const normalizedTagFilters = Array.isArray( this.filterTags )
+					? this.filterTags
+							.map( ( tag ) =>
+								String( tag || '' )
+									.trim()
+									.toLowerCase()
+							)
+							.filter( ( tag ) => tag.length > 0 )
+					: [];
+
+				if (
+					normalizedCategoryFilters.length === 0 &&
+					normalizedTagFilters.length === 0
+				) {
+					return events;
+				}
+
+				return events.filter( ( event ) => {
+					let matchesCategories = true;
+					let matchesTags = true;
+
+					if ( normalizedCategoryFilters.length > 0 ) {
+						if ( ! Array.isArray( event.categories ) ) {
+							matchesCategories = false;
+						} else {
+							const normalizedEventCategories = event.categories
+								.map( ( category ) =>
+									String( category || '' )
+										.trim()
+										.toLowerCase()
+								)
+								.filter( ( category ) => category.length > 0 );
+
+							matchesCategories = normalizedCategoryFilters.some(
+								( category ) =>
+									normalizedEventCategories.includes(
+										category
+									)
+							);
+						}
+					}
+
+					if ( normalizedTagFilters.length > 0 ) {
+						if ( ! Array.isArray( event.tags ) ) {
+							matchesTags = false;
+						} else {
+							const normalizedEventTags = event.tags
+								.map( ( tag ) =>
+									String( tag || '' )
+										.trim()
+										.toLowerCase()
+								)
+								.filter( ( tag ) => tag.length > 0 );
+
+							matchesTags = normalizedTagFilters.some( ( tag ) =>
+								normalizedEventTags.includes( tag )
+							);
+						}
+					}
+
+					return matchesCategories && matchesTags;
+				} );
+			},
+
+			getExtraMetaLines( event ) {
+				const providers =
+					window.ventocalendarCalendarExtraMetaProviders || [];
+				const lines = [];
+
+				providers.forEach( ( provider ) => {
+					if ( 'function' !== typeof provider ) {
+						return;
+					}
+
+					const providerLines = provider( event, this );
+
+					if ( ! Array.isArray( providerLines ) ) {
+						return;
+					}
+
+					providerLines.forEach( ( line ) => {
+						if ( line ) {
+							lines.push( line );
+						}
+					} );
+				} );
+
+				return lines;
+			},
+
 			generateGoogleCalendarURL( {
 				title,
 				start_date,
@@ -1028,13 +1171,18 @@
                                 <div class="event-block">
                                     <div class="event-details">
                                         <div class="event-title">{{ event.title }}</div>
-                                        <div v-if="formatEventDateTime(event)" class="event-meta">
-                                            <div class="meta-item">
-                                                {{ formatEventDateTime(event) }}
-                                            </div>
-                                        </div>
-                                    </div>
-									<div class="event-actions">
+	                                            <div v-if="formatEventDateTime(event)" class="event-meta">
+	                                                <div class="meta-item">
+	                                                    {{ formatEventDateTime(event) }}
+	                                                </div>
+	                                            </div>
+										<div v-if="getExtraMetaLines(event).length" class="event-meta ventocalendar-event-meta-extra">
+											<div v-for="(line, lineIndex) in getExtraMetaLines(event)" :key="event.id + '-meta-' + lineIndex" class="meta-item">
+												{{ line }}
+											</div>
+										</div>
+	                                        </div>
+										<div class="event-actions">
 										<div class="event-link">
 											<a :href="event.permalink">{{ translate('View event') }}</a>
 										</div>
@@ -1069,12 +1217,17 @@
                                     <div class="event-block">
                                         <div class="event-details">
                                             <div class="event-title">{{ event.title }}</div>
-                                            <div v-if="formatEventDateTime(event)" class="event-meta">
-                                                <div class="meta-item">
-                                                    {{ formatEventDateTime(event) }}
-                                                </div>
-                                            </div>
-                                        </div>
+	                                            <div v-if="formatEventDateTime(event)" class="event-meta">
+	                                                <div class="meta-item">
+	                                                    {{ formatEventDateTime(event) }}
+	                                                </div>
+	                                            </div>
+										<div v-if="getExtraMetaLines(event).length" class="event-meta ventocalendar-event-meta-extra">
+											<div v-for="(line, lineIndex) in getExtraMetaLines(event)" :key="event.id + '-modal-meta-' + lineIndex" class="meta-item">
+												{{ line }}
+											</div>
+										</div>
+	                                        </div>
 										<div class="event-actions">
 											<div class="event-link">
 												<a :href="event.permalink">{{ translate('View event') }}</a>

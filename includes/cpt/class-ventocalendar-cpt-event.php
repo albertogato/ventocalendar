@@ -35,6 +35,11 @@ class VentoCalendar_CPT_Event {
 		'start_time' => '_start_time',
 		'end_time'   => '_end_time',
 		'color'      => '_color',
+		'location'   => '_location',
+		'address'    => '_address',
+		'show_map'   => '_show_map',
+		'latitude'   => '_location_latitude',
+		'longitude'  => '_location_longitude',
 	);
 
 	/**
@@ -186,6 +191,78 @@ class VentoCalendar_CPT_Event {
 				},
 			)
 		);
+
+		// Register show_map meta field.
+		register_post_meta(
+			'ventocalendar_event',
+			$this->meta_keys['location'],
+			array(
+				'type'          => 'string',
+				'single'        => true,
+				'show_in_rest'  => true,
+				'default'       => '',
+				'auth_callback' => function () {
+					return current_user_can( 'edit_posts' );
+				},
+			)
+		);
+
+		register_post_meta(
+			'ventocalendar_event',
+			$this->meta_keys['address'],
+			array(
+				'type'          => 'string',
+				'single'        => true,
+				'show_in_rest'  => true,
+				'default'       => '',
+				'auth_callback' => function () {
+					return current_user_can( 'edit_posts' );
+				},
+			)
+		);
+
+		// Register show_map meta field.
+		register_post_meta(
+			'ventocalendar_event',
+			$this->meta_keys['show_map'],
+			array(
+				'type'          => 'boolean',
+				'single'        => true,
+				'show_in_rest'  => true,
+				'default'       => false,
+				'auth_callback' => function () {
+					return current_user_can( 'edit_posts' );
+				},
+			)
+		);
+
+		// Register latitude meta field.
+		register_post_meta(
+			'ventocalendar_event',
+			$this->meta_keys['latitude'],
+			array(
+				'type'          => 'number',
+				'single'        => true,
+				'show_in_rest'  => true,
+				'auth_callback' => function () {
+					return current_user_can( 'edit_posts' );
+				},
+			)
+		);
+
+		// Register longitude meta field.
+		register_post_meta(
+			'ventocalendar_event',
+			$this->meta_keys['longitude'],
+			array(
+				'type'          => 'number',
+				'single'        => true,
+				'show_in_rest'  => true,
+				'auth_callback' => function () {
+					return current_user_can( 'edit_posts' );
+				},
+			)
+		);
 	}
 
 	/**
@@ -220,6 +297,11 @@ class VentoCalendar_CPT_Event {
 		$start_time = get_post_meta( $post->ID, $this->meta_keys['start_time'], true );
 		$end_time   = get_post_meta( $post->ID, $this->meta_keys['end_time'], true );
 		$color      = get_post_meta( $post->ID, $this->meta_keys['color'], true );
+		$location   = get_post_meta( $post->ID, $this->meta_keys['location'], true );
+		$address    = get_post_meta( $post->ID, $this->meta_keys['address'], true );
+		$show_map   = get_post_meta( $post->ID, $this->meta_keys['show_map'], true );
+		$latitude   = get_post_meta( $post->ID, $this->meta_keys['latitude'], true );
+		$longitude  = get_post_meta( $post->ID, $this->meta_keys['longitude'], true );
 
 		// If no color, use the default.
 		if ( empty( $color ) ) {
@@ -233,6 +315,7 @@ class VentoCalendar_CPT_Event {
 		// Determine if "All day" checkbox should be checked.
 		// Checked only if: end_date has a value.
 		$is_all_day = ! empty( $end_date );
+		$show_map   = (bool) $show_map;
 
 		?>
 		<div class="ventocalendar-meta-box-wrapper">
@@ -376,6 +459,77 @@ class VentoCalendar_CPT_Event {
 							</p>
 						</td>
 					</tr>
+
+					<tr>
+						<th scope="row">
+							<label for="ventocalendar-location">
+								<?php esc_html_e( 'Location', 'ventocalendar' ); ?>
+							</label>
+						</th>
+						<td>
+							<input
+								type="text"
+								id="ventocalendar-location"
+								name="ventocalendar_location"
+								value="<?php echo esc_attr( $location ); ?>"
+								class="regular-text"
+							/>
+						</td>
+					</tr>
+
+					<tr>
+						<th scope="row">
+							<label for="ventocalendar-address">
+								<?php esc_html_e( 'Address', 'ventocalendar' ); ?>
+							</label>
+						</th>
+						<td>
+							<input
+								type="text"
+								id="ventocalendar-address"
+								name="ventocalendar_address"
+								value="<?php echo esc_attr( $address ); ?>"
+								class="regular-text"
+							/>
+						</td>
+					</tr>
+
+					<!-- Show map -->
+					<tr>
+						<th scope="row"></th>
+						<td>
+							<label for="ventocalendar-show-map">
+								<input
+									type="checkbox"
+									id="ventocalendar-show-map"
+									name="ventocalendar_show_map"
+									value="1"
+									<?php checked( $show_map, true ); ?>
+								/>
+								<?php esc_html_e( 'Show map', 'ventocalendar' ); ?>
+							</label>
+						</td>
+					</tr>
+
+					<tr class="ventocalendar-map-field" style="<?php echo $show_map ? '' : 'display:none;'; ?>">
+						<th scope="row">
+							<?php esc_html_e( 'Map location', 'ventocalendar' ); ?>
+						</th>
+						<td>
+							<div id="ventocalendar-event-map" class="ventocalendar-event-map" aria-hidden="<?php echo $show_map ? 'false' : 'true'; ?>"></div>
+							<input type="hidden" id="ventocalendar-location-latitude" name="ventocalendar_location_latitude" value="<?php echo esc_attr( $latitude ); ?>" />
+							<input type="hidden" id="ventocalendar-location-longitude" name="ventocalendar_location_longitude" value="<?php echo esc_attr( $longitude ); ?>" />
+							<p class="description" id="ventocalendar-map-click-description">
+								<?php esc_html_e( 'Click the map to set the event location.', 'ventocalendar' ); ?>
+							</p>
+							<p class="description" id="ventocalendar-map-coordinates"></p>
+							<p>
+								<button type="button" class="button" id="ventocalendar-use-my-location">
+									<?php esc_html_e( 'Use my location', 'ventocalendar' ); ?>
+								</button>
+							</p>
+						</td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
@@ -505,6 +659,46 @@ class VentoCalendar_CPT_Event {
 			update_post_meta( $post_id, $this->meta_keys['color'], $color );
 		}
 
+		if ( isset( $_POST['ventocalendar_location'] ) ) {
+			$location = sanitize_text_field( wp_unslash( $_POST['ventocalendar_location'] ) );
+			if ( '' !== $location ) {
+				update_post_meta( $post_id, $this->meta_keys['location'], $location );
+			} else {
+				delete_post_meta( $post_id, $this->meta_keys['location'] );
+			}
+		}
+
+		if ( isset( $_POST['ventocalendar_address'] ) ) {
+			$address = sanitize_text_field( wp_unslash( $_POST['ventocalendar_address'] ) );
+			if ( '' !== $address ) {
+				update_post_meta( $post_id, $this->meta_keys['address'], $address );
+			} else {
+				delete_post_meta( $post_id, $this->meta_keys['address'] );
+			}
+		}
+
+		$show_map = isset( $_POST['ventocalendar_show_map'] ) && '1' === sanitize_text_field( wp_unslash( $_POST['ventocalendar_show_map'] ) );
+		update_post_meta( $post_id, $this->meta_keys['show_map'], $show_map ? '1' : '0' );
+
+		$raw_latitude  = isset( $_POST['ventocalendar_location_latitude'] ) ? sanitize_text_field( wp_unslash( $_POST['ventocalendar_location_latitude'] ) ) : '';
+		$raw_longitude = isset( $_POST['ventocalendar_location_longitude'] ) ? sanitize_text_field( wp_unslash( $_POST['ventocalendar_location_longitude'] ) ) : '';
+
+		$latitude  = $this->sanitize_coordinate( $raw_latitude, -90, 90 );
+		$longitude = $this->sanitize_coordinate( $raw_longitude, -180, 180 );
+
+		$has_latitude_input  = '' !== trim( $raw_latitude );
+		$has_longitude_input = '' !== trim( $raw_longitude );
+
+		if ( null !== $latitude && null !== $longitude ) {
+			update_post_meta( $post_id, $this->meta_keys['latitude'], $latitude );
+			update_post_meta( $post_id, $this->meta_keys['longitude'], $longitude );
+		} elseif ( $has_latitude_input || $has_longitude_input ) {
+			$validation_errors[] = __( 'Invalid map coordinates.', 'ventocalendar' );
+		} else {
+			delete_post_meta( $post_id, $this->meta_keys['latitude'] );
+			delete_post_meta( $post_id, $this->meta_keys['longitude'] );
+		}
+
 		// Perform cross-field validation.
 		$cross_validation_errors = $this->validate_event_dates_times( $post_id, $is_all_day );
 		$validation_errors       = array_merge( $validation_errors, $cross_validation_errors );
@@ -582,6 +776,35 @@ class VentoCalendar_CPT_Event {
 		}
 
 		return '';
+	}
+
+	/**
+	 * Sanitize and validate map coordinate.
+	 *
+	 * @since 1.0.0
+	 * @param string $value Raw coordinate value.
+	 * @param float  $min   Minimum value.
+	 * @param float  $max   Maximum value.
+	 * @return float|null
+	 */
+	private function sanitize_coordinate( $value, $min, $max ) {
+		$coordinate = trim( sanitize_text_field( $value ) );
+
+		if ( '' === $coordinate ) {
+			return null;
+		}
+
+		if ( ! is_numeric( $coordinate ) ) {
+			return null;
+		}
+
+		$coordinate = (float) $coordinate;
+
+		if ( $coordinate < $min || $coordinate > $max ) {
+			return null;
+		}
+
+		return round( $coordinate, 7 );
 	}
 
 	/**

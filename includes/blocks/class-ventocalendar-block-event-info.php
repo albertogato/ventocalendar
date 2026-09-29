@@ -24,6 +24,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 class VentoCalendar_Block_Event_Info {
 
 	/**
+	 * Plugin name.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      string
+	 */
+	private $plugin_name;
+
+	/**
+	 * Initialize block class.
+	 *
+	 * @since    1.0.0
+	 * @param    string $plugin_name Plugin name.
+	 */
+	public function __construct( $plugin_name = 'ventocalendar' ) {
+		$this->plugin_name = $plugin_name;
+	}
+
+	/**
 	 * Register the block.
 	 *
 	 * @since    1.0.0
@@ -62,9 +81,118 @@ class VentoCalendar_Block_Event_Info {
 						'type'    => 'boolean',
 						'default' => true,
 					),
+					'showLocation'  => array(
+						'type'    => 'boolean',
+						'default' => true,
+					),
+					'showAddress'   => array(
+						'type'    => 'boolean',
+						'default' => true,
+					),
+					'showMap'       => array(
+						'type'    => 'boolean',
+						'default' => true,
+					),
 				),
 			)
 		);
+	}
+
+	/**
+	 * Build the location text HTML for event info block.
+	 *
+	 * @since    1.0.0
+	 * @param    int  $post_id       Event post ID.
+	 * @param    bool $show_location Whether location should be shown.
+	 * @param    bool $show_address  Whether address should be shown.
+	 * @return   string
+	 */
+	private function get_event_location_details_html( $post_id, $show_location, $show_address ) {
+		if ( ! $show_location && ! $show_address ) {
+			return '';
+		}
+
+		$location = get_post_meta( $post_id, '_location', true );
+		$address  = get_post_meta( $post_id, '_address', true );
+
+		$location = trim( (string) $location );
+		$address  = trim( (string) $address );
+
+		$location_html      = '<div class="ventocalendar-event-location-details">';
+		$has_location_lines = false;
+
+		if ( $show_location && '' !== $location ) {
+			$location_html .= '<p class="ventocalendar-event-location-line">' . esc_html( $location ) . '</p>';
+			$has_location_lines = true;
+		}
+
+		if ( $show_address && '' !== $address ) {
+			$location_html .= '<p class="ventocalendar-event-location-line">' . esc_html( $address ) . '</p>';
+			$has_location_lines = true;
+		}
+
+		$location_html .= '</div>';
+
+		if ( ! $has_location_lines ) {
+			return '';
+		}
+
+		return $location_html;
+	}
+
+	/**
+	 * Build the map HTML for event info block.
+	 *
+	 * @since    1.0.0
+	 * @param    int  $post_id  Event post ID.
+	 * @param    bool $show_map Whether map should be shown.
+	 * @return   string
+	 */
+	private function get_event_map_html( $post_id, $show_map ) {
+		if ( ! $show_map ) {
+			return '';
+		}
+
+		$event_show_map = get_post_meta( $post_id, '_show_map', true );
+
+		if ( '1' !== (string) $event_show_map ) {
+			return '';
+		}
+
+		$latitude  = get_post_meta( $post_id, '_location_latitude', true );
+		$longitude = get_post_meta( $post_id, '_location_longitude', true );
+
+		if ( ! $this->is_valid_coordinate( $latitude, -90, 90 ) || ! $this->is_valid_coordinate( $longitude, -180, 180 ) ) {
+			return '';
+		}
+
+		$latitude  = round( (float) $latitude, 7 );
+		$longitude = round( (float) $longitude, 7 );
+
+		$map_html  = '<div class="ventocalendar-event-map-wrapper">';
+		$map_html .= '<div class="ventocalendar-event-map-view" data-latitude="' . esc_attr( $latitude ) . '" data-longitude="' . esc_attr( $longitude ) . '" aria-label="' . esc_attr__( 'Event location map', 'ventocalendar' ) . '"></div>';
+		$map_html .= '</div>';
+
+		return $map_html;
+	}
+
+	/**
+	 * Validate coordinate value.
+	 *
+	 * @since    1.0.0
+	 * @param    mixed $value Coordinate value.
+	 * @param    float $min   Minimum accepted value.
+	 * @param    float $max   Maximum accepted value.
+	 * @return   bool
+	 */
+	private function is_valid_coordinate( $value, $min, $max ) {
+		if ( '' === (string) $value || ! is_numeric( $value ) ) {
+			return false;
+		}
+
+		$value = (float) $value;
+
+		return $value >= $min && $value <= $max;
 	}
 
 	/**
@@ -134,6 +262,55 @@ class VentoCalendar_Block_Event_Info {
 	}
 
 	/**
+	 * Build event taxonomies HTML for Pro event information.
+	 *
+	 * @since    1.0.0
+	 * @param    int   $post_id Event post ID.
+	 * @param    array $options Plugin options.
+	 * @return   string
+	 */
+	private function get_event_taxonomies_html( $post_id, $options ) {
+		if ( 'ventocalendar-pro' !== $this->plugin_name ) {
+			return '';
+		}
+
+		$show_categories = isset( $options['show_categories'] ) && $options['show_categories'];
+		$show_tags       = isset( $options['show_tags'] ) && $options['show_tags'];
+
+		if ( ! $show_categories && ! $show_tags ) {
+			return '';
+		}
+
+		$taxonomies_html = '';
+
+		if ( $show_categories ) {
+			$categories = get_the_terms( $post_id, 'ventocalendar_event_category' );
+			if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) {
+				$category_names   = wp_list_pluck( $categories, 'name' );
+				$taxonomies_html .= '<div class="ventocalendar-event-taxonomy ventocalendar-event-categories">';
+				$taxonomies_html .= '<span class="ventocalendar-event-taxonomy-values">' . esc_html( implode( ', ', $category_names ) ) . '</span>';
+				$taxonomies_html .= '</div>';
+			}
+		}
+
+		if ( $show_tags ) {
+			$tags = get_the_terms( $post_id, 'ventocalendar_event_tag' );
+			if ( ! empty( $tags ) && ! is_wp_error( $tags ) ) {
+				$tag_names        = wp_list_pluck( $tags, 'name' );
+				$taxonomies_html .= '<div class="ventocalendar-event-taxonomy ventocalendar-event-tags">';
+				$taxonomies_html .= '<span class="ventocalendar-event-taxonomy-values">' . esc_html( implode( ', ', $tag_names ) ) . '</span>';
+				$taxonomies_html .= '</div>';
+			}
+		}
+
+		if ( '' === $taxonomies_html ) {
+			return '';
+		}
+
+		return '<div class="ventocalendar-event-taxonomies">' . $taxonomies_html . '</div>';
+	}
+
+	/**
 	 * Render the block on the frontend.
 	 *
 	 * @since    1.0.0
@@ -158,6 +335,12 @@ class VentoCalendar_Block_Event_Info {
 		$time_format     = get_option( 'time_format' );
 		$show_start_time = isset( $attributes['showStartTime'] ) ? $attributes['showStartTime'] : false;
 		$show_end_time   = isset( $attributes['showEndTime'] ) ? $attributes['showEndTime'] : false;
+		$show_location   = isset( $attributes['showLocation'] ) ? $attributes['showLocation'] : true;
+		$show_address    = isset( $attributes['showAddress'] ) ? $attributes['showAddress'] : true;
+		$show_map        = isset( $attributes['showMap'] ) ? $attributes['showMap'] : true;
+		$options         = get_option( $this->plugin_name, array() );
+		$location_html   = $this->get_event_location_details_html( $post->ID, $show_location, $show_address );
+		$map_html        = $this->get_event_map_html( $post->ID, $show_map );
 
 		// Get event dates, times and color.
 		$start_date  = get_post_meta( $post->ID, '_start_date', true );
@@ -224,6 +407,13 @@ class VentoCalendar_Block_Event_Info {
 		}
 
 		$html .= '</div>';
+		$html .= $this->get_event_taxonomies_html( $post->ID, $options );
+		if ( '' !== $location_html ) {
+			$html .= $location_html;
+		}
+		if ( '' !== $map_html ) {
+			$html .= $map_html;
+		}
 		$html .= '</div>';
 
 		return $html;

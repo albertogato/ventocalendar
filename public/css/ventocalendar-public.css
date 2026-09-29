@@ -36,6 +36,7 @@
 }
 
 /* Divi compatibility */
+/* stylelint-disable-next-line selector-class-pattern */
 .et_pb_post .ventocalendar-date-info {
 	font-family: inherit;
 }
@@ -45,4 +46,39 @@ article .ventocalendar-date-info:first-child,
 .entry-content .ventocalendar-date-info:first-child,
 .post-content .ventocalendar-date-info:first-child {
 	margin-top: 0;
+}
+
+.ventocalendar-event-map-wrapper {
+	margin-top: 1rem;
+}
+
+.ventocalendar-event-location-details {
+	margin-top: 1rem;
+}
+
+.ventocalendar-event-location-line {
+	margin: 0.35rem 0;
+}
+
+.ventocalendar-event-map-title {
+	margin: 0 0 0.75rem;
+	font-size: 1rem;
+	font-weight: 600;
+	line-height: 1.4;
+}
+
+.ventocalendar-event-map-view {
+	width: 100%;
+	height: 320px;
+	border: 1px solid #d0d4da;
+	border-radius: 4px;
+	overflow: hidden;
+	background: #f3f4f6;
+}
+
+@media (max-width: 782px) {
+
+	.ventocalendar-event-map-view {
+		height: 260px;
+	}
 }

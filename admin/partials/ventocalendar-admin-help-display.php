@@ -12,7 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$ventocalendar_nonce_action = 'ventocalendar_tabs';
+$ventocalendar_nonce_action  = $this->plugin_name . '_tabs';
+$ventocalendar_help_page     = $this->get_help_page_slug();
+$ventocalendar_settings_page = $this->get_settings_page_slug();
 
 // Get the current tab safely.
 $ventocalendar_help_usage_active_tab = 'quick-start';
@@ -21,7 +23,7 @@ if ( isset( $_GET['tab'], $_GET['_wpnonce'] ) ) {
 	$ventocalendar_get_tab = sanitize_text_field( wp_unslash( $_GET['tab'] ) );
 	$ventocalendar_nonce   = sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) );
 
-	if ( wp_verify_nonce( $ventocalendar_nonce, 'ventocalendar_tabs' ) ) {
+	if ( wp_verify_nonce( $ventocalendar_nonce, $ventocalendar_nonce_action ) ) {
 		$ventocalendar_help_usage_active_tab = $ventocalendar_get_tab;
 	}
 }
@@ -37,33 +39,34 @@ if ( isset( $_GET['tab'], $_GET['_wpnonce'] ) ) {
  * @param string $tab The tab identifier to link to.
  * @return string The complete admin URL with tab parameter and nonce.
  */
-function ventocalendar_tab_link( $tab ) {
-	$ventocalendar_nonce = wp_create_nonce( 'ventocalendar_tabs' );
+$ventocalendar_tab_link = static function ( $tab ) use ( $ventocalendar_help_page, $ventocalendar_nonce_action ) {
+	$ventocalendar_nonce = wp_create_nonce( $ventocalendar_nonce_action );
+
 	return add_query_arg(
 		array(
-			'page'     => 'ventocalendar-help',
+			'page'     => $ventocalendar_help_page,
 			'tab'      => $tab,
 			'_wpnonce' => $ventocalendar_nonce,
 		),
 		admin_url( 'admin.php' )
 	);
-}
+};
 ?>
 
 <div class="wrap">
 	<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 
 	<h2 class="nav-tab-wrapper">
-		<a href="<?php echo esc_url( ventocalendar_tab_link( 'quick-start' ) ); ?>" class="nav-tab <?php echo 'quick-start' === $ventocalendar_help_usage_active_tab ? 'nav-tab-active' : ''; ?>">
+		<a href="<?php echo esc_url( $ventocalendar_tab_link( 'quick-start' ) ); ?>" class="nav-tab <?php echo 'quick-start' === $ventocalendar_help_usage_active_tab ? 'nav-tab-active' : ''; ?>">
 			<?php esc_html_e( 'Quick start', 'ventocalendar' ); ?>
 		</a>
-		<a href="<?php echo esc_url( ventocalendar_tab_link( 'blocks' ) ); ?>" class="nav-tab <?php echo 'blocks' === $ventocalendar_help_usage_active_tab ? 'nav-tab-active' : ''; ?>">
+		<a href="<?php echo esc_url( $ventocalendar_tab_link( 'blocks' ) ); ?>" class="nav-tab <?php echo 'blocks' === $ventocalendar_help_usage_active_tab ? 'nav-tab-active' : ''; ?>">
 			<?php esc_html_e( 'Gutenberg blocks', 'ventocalendar' ); ?>
 		</a>
-		<a href="<?php echo esc_url( ventocalendar_tab_link( 'shortcodes' ) ); ?>" class="nav-tab <?php echo 'shortcodes' === $ventocalendar_help_usage_active_tab ? 'nav-tab-active' : ''; ?>">
+		<a href="<?php echo esc_url( $ventocalendar_tab_link( 'shortcodes' ) ); ?>" class="nav-tab <?php echo 'shortcodes' === $ventocalendar_help_usage_active_tab ? 'nav-tab-active' : ''; ?>">
 			<?php esc_html_e( 'Shortcodes', 'ventocalendar' ); ?>
 		</a>
-		<a href="<?php echo esc_url( ventocalendar_tab_link( 'custom-css' ) ); ?>" class="nav-tab <?php echo 'custom-css' === $ventocalendar_help_usage_active_tab ? 'nav-tab-active' : ''; ?>">
+		<a href="<?php echo esc_url( $ventocalendar_tab_link( 'custom-css' ) ); ?>" class="nav-tab <?php echo 'custom-css' === $ventocalendar_help_usage_active_tab ? 'nav-tab-active' : ''; ?>">
 			<?php esc_html_e( 'Custom CSS', 'ventocalendar' ); ?>
 		</a>
 	</h2>
@@ -120,10 +123,10 @@ function ventocalendar_tab_link( $tab ) {
 						<li><?php esc_html_e( 'The shortcode [ventocalendar-calendar]', 'ventocalendar' ); ?></li>
 					</ul>
 					<p>
-						<a href="?page=ventocalendar-help&tab=blocks" class="button">
+					<a href="<?php echo esc_url( $ventocalendar_tab_link( 'blocks' ) ); ?>" class="button">
 							<?php esc_html_e( 'Learn about Blocks', 'ventocalendar' ); ?>
 						</a>
-						<a href="?page=ventocalendar-help&tab=shortcodes" class="button" style="margin-left: 10px;">
+					<a href="<?php echo esc_url( $ventocalendar_tab_link( 'shortcodes' ) ); ?>" class="button" style="margin-left: 10px;">
 							<?php esc_html_e( 'Learn about Shortcodes', 'ventocalendar' ); ?>
 						</a>
 					</p>
@@ -136,7 +139,7 @@ function ventocalendar_tab_link( $tab ) {
 					</h4>
 					<p><?php esc_html_e( 'Go to VentoCalendar > Settings to configure how event information is automatically displayed on event posts.', 'ventocalendar' ); ?></p>
 					<p>
-						<a href="<?php echo esc_url( admin_url( 'admin.php?page=ventocalendar-settings' ) ); ?>" class="button">
+					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $ventocalendar_settings_page ) ); ?>" class="button">
 							<?php esc_html_e( 'Go to Settings', 'ventocalendar' ); ?>
 						</a>
 					</p>
@@ -154,9 +157,12 @@ function ventocalendar_tab_link( $tab ) {
 						<li><code>[ventocalendar-end-date]</code></li>
 						<li><code>[ventocalendar-start-time]</code></li>
 						<li><code>[ventocalendar-end-time]</code></li>
+						<li><code>[ventocalendar-location]</code></li>
+						<li><code>[ventocalendar-address]</code></li>
+						<li><code>[ventocalendar-map]</code></li>
 					</ul>
 					<p>
-						<a href="?page=ventocalendar-help&tab=shortcodes" class="button">
+					<a href="<?php echo esc_url( $ventocalendar_tab_link( 'shortcodes' ) ); ?>" class="button">
 							<?php esc_html_e( 'View shortcode documentation', 'ventocalendar' ); ?>
 						</a>
 					</p>
@@ -310,6 +316,18 @@ function ventocalendar_tab_link( $tab ) {
 								<td><strong><?php esc_html_e( 'Show end time', 'ventocalendar' ); ?></strong></td>
 								<td><?php esc_html_e( 'Check this box to include the time in the end date display', 'ventocalendar' ); ?></td>
 							</tr>
+							<tr>
+								<td><strong><?php esc_html_e( 'Show location', 'ventocalendar' ); ?></strong></td>
+								<td><?php esc_html_e( 'Check this box to display the event location from the Event Details metabox', 'ventocalendar' ); ?></td>
+							</tr>
+							<tr class="alternate">
+								<td><strong><?php esc_html_e( 'Show address', 'ventocalendar' ); ?></strong></td>
+								<td><?php esc_html_e( 'Check this box to display the event address from the Event Details metabox', 'ventocalendar' ); ?></td>
+							</tr>
+							<tr>
+								<td><strong><?php esc_html_e( 'Show map', 'ventocalendar' ); ?></strong></td>
+								<td><?php esc_html_e( 'Check this box to display the event map when the event has Show map enabled and valid coordinates', 'ventocalendar' ); ?></td>
+							</tr>
 						</tbody>
 					</table>
 
@@ -398,6 +416,21 @@ function ventocalendar_tab_link( $tab ) {
 								<td><?php esc_html_e( 'Displays the event end time using the format configured in WordPress Settings > General.', 'ventocalendar' ); ?></td>
 								<td><strong><?php echo esc_html( date_i18n( get_option( 'time_format' ), strtotime( 'now' ) ) ); ?></strong></td>
 							</tr>
+							<tr>
+								<td><code>[ventocalendar-location]</code></td>
+								<td><?php esc_html_e( 'Displays the event location saved in the Event Details metabox.', 'ventocalendar' ); ?></td>
+								<td><strong><?php esc_html_e( 'Venue name', 'ventocalendar' ); ?></strong></td>
+							</tr>
+							<tr class="alternate">
+								<td><code>[ventocalendar-address]</code></td>
+								<td><?php esc_html_e( 'Displays the event address saved in the Event Details metabox.', 'ventocalendar' ); ?></td>
+								<td><strong><?php esc_html_e( 'Street address', 'ventocalendar' ); ?></strong></td>
+							</tr>
+							<tr>
+								<td><code>[ventocalendar-map]</code></td>
+								<td><?php esc_html_e( 'Displays the event map using the location coordinates saved in the event details.', 'ventocalendar' ); ?></td>
+								<td><strong><?php esc_html_e( 'Interactive map', 'ventocalendar' ); ?></strong></td>
+							</tr>
 						</tbody>
 					</table>
 
@@ -471,6 +504,8 @@ function ventocalendar_tab_link( $tab ) {
 							<?php esc_html_e( 'These shortcodes only work within event post content. If used in other post types, they will not display anything.', 'ventocalendar' ); ?>
 						</p>
 					</div>
+
+					<?php do_action( 'ventocalendar_help_shortcodes_after_event_info', $this->plugin_name ); ?>
 				</div>
 
 				<hr style="margin: 30px 0;">
@@ -662,7 +697,7 @@ function ventocalendar_tab_link( $tab ) {
 						</thead>
 						<tbody>
 							<?php
-							$variables = array(
+							$ventocalendar_variables = array(
 								// Colors.
 								array( '--ventocalendar-bg', '#fff', __( 'Main background color of the calendar', 'ventocalendar' ) ),
 								array( '--ventocalendar-button-bg', '#fff', __( 'Background color of navigation buttons', 'ventocalendar' ) ),
@@ -700,12 +735,12 @@ function ventocalendar_tab_link( $tab ) {
 								array( '--ventocalendar-event-bar-offset', '6px', __( 'Vertical offset between stacked event bars', 'ventocalendar' ) ),
 							);
 
-							foreach ( $variables as $var ) :
+							foreach ( $ventocalendar_variables as $ventocalendar_var ) :
 								?>
 								<tr>
-									<td><code><?php echo esc_html( $var[0] ); ?></code></td>
-									<td><code><?php echo esc_html( $var[1] ); ?></code></td>
-									<td><?php echo esc_html( $var[2] ); ?></td>
+									<td><code><?php echo esc_html( $ventocalendar_var[0] ); ?></code></td>
+									<td><code><?php echo esc_html( $ventocalendar_var[1] ); ?></code></td>
+									<td><?php echo esc_html( $ventocalendar_var[2] ); ?></td>
 								</tr>
 								<?php
 							endforeach;

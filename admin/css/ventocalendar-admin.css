@@ -71,3 +71,18 @@
 	vertical-align: middle;
 	margin-right: 5px;
 }
+
+.ventocalendar-event-map {
+	width: 100%;
+	max-width: 760px;
+	height: 320px;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	overflow: hidden;
+	background: #f6f7f7;
+	margin: 8px 0 10px;
+}
+
+.ventocalendar-map-field .description {
+	margin-top: 6px;
+}

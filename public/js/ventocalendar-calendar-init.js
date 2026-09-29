@@ -33,6 +33,21 @@
 		const showAddToCalendarApple =
 			element.getAttribute( 'data-show-add-to-calendar-apple' ) ===
 			'true';
+		const showCategories =
+			element.getAttribute( 'data-show-categories' ) === 'true';
+		const showTags = element.getAttribute( 'data-show-tags' ) === 'true';
+		const filterCategories = (
+			element.getAttribute( 'data-filter-categories' ) || ''
+		)
+			.split( ',' )
+			.map( ( category ) => category.trim() )
+			.filter( ( category ) => category.length > 0 );
+		const filterTags = ( element.getAttribute( 'data-filter-tags' ) || '' )
+			.split( ',' )
+			.map( ( tag ) => tag.trim() )
+			.filter( ( tag ) => tag.length > 0 );
+		const eventsEndpoint =
+			element.getAttribute( 'data-events-endpoint' ) || '';
 
 		// Parse format strings from JSON to preserve backslashes.
 		let dateFormat = 'F j, Y';
@@ -68,10 +83,15 @@
 	                    :show-end-date="showEndDate"
 	                    :show-start-time="showStartTime"
 	                    :show-end-time="showEndTime"
-						:show-add-to-calendar-google="showAddToCalendarGoogle"
-						:show-add-to-calendar-apple="showAddToCalendarApple"
-	                    :date-format="dateFormat"
-	                    :time-format="timeFormat"
+	                    :show-add-to-calendar-google="showAddToCalendarGoogle"
+		                    :show-add-to-calendar-apple="showAddToCalendarApple"
+						:show-categories="showCategories"
+						:show-tags="showTags"
+						:filter-categories="filterCategories"
+						:filter-tags="filterTags"
+			                    :date-format="dateFormat"
+		                    :time-format="timeFormat"
+						:events-endpoint="eventsEndpoint"
 	                />
 				`,
 			data() {
@@ -86,8 +106,13 @@
 					showEndTime,
 					showAddToCalendarGoogle,
 					showAddToCalendarApple,
+					showCategories,
+					showTags,
+					filterCategories,
+					filterTags,
 					dateFormat,
 					timeFormat,
+					eventsEndpoint,
 				};
 			},
 		} );

@@ -24,6 +24,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 class VentoCalendar_REST_API {
 
 	/**
+	 * Plugin REST namespace.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      string
+	 */
+	private $rest_namespace;
+
+	/**
+	 * Initialize REST API class.
+	 *
+	 * @since    1.0.0
+	 * @param    string $plugin_name Plugin name.
+	 */
+	public function __construct( $plugin_name = 'ventocalendar' ) {
+		$this->rest_namespace = $plugin_name . '/v1';
+	}
+
+	/**
 	 * Register REST API routes.
 	 *
 	 * @since    1.0.0
@@ -35,7 +54,7 @@ class VentoCalendar_REST_API {
 		// This endpoint is intentionally public; anyone can fetch events.
 		// Using '__return_true' as permission_callback is correct for public data.
 		register_rest_route(
-			'ventocalendar/v1',
+			$this->rest_namespace,
 			'/events',
 			array(
 				'methods'             => 'GET',
@@ -75,13 +94,13 @@ class VentoCalendar_REST_API {
 			'post_status'    => 'publish',
 			'posts_per_page' => -1,
 			'orderby'        => 'meta_value',
-			'meta_key'       => '_start_date',
+			'meta_key'       => '_start_date', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Needed to sort events by start date.
 			'order'          => 'ASC',
 		);
 
 		// Add date range filter if provided.
 		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
-			$args['meta_query'] = array(
+			$args['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Needed for date range filtering in events endpoint.
 				'relation' => 'OR',
 				// Events with start_date in range (includes events without end_date).
 				array(
@@ -141,7 +160,7 @@ class VentoCalendar_REST_API {
 					$color = '#2271b1';
 				}
 
-				$events[] = array(
+				$event_data = array(
 					'id'         => $post_id,
 					'title'      => get_the_title(),
 					'start_date' => $start_date,
@@ -151,6 +170,8 @@ class VentoCalendar_REST_API {
 					'color'      => $color,
 					'permalink'  => get_permalink(),
 				);
+
+				$events[] = apply_filters( 'ventocalendar_rest_event_data', $event_data, $post_id, $this->rest_namespace );
 			}
 			wp_reset_postdata();
 		}

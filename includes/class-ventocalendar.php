@@ -70,7 +70,7 @@ class VentoCalendar {
 		} else {
 			$this->version = '1.0.0';
 		}
-		$this->plugin_name = 'ventocalendar';
+		$this->plugin_name = $this->get_default_plugin_name();
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -80,6 +80,19 @@ class VentoCalendar {
 		$this->define_shortcodes();
 		$this->define_blocks();
 		$this->define_rest_api();
+	}
+
+	/**
+	 * Get the default plugin name.
+	 *
+	 * Child classes can override this to provide their own plugin identifier
+	 * before hooks and dependencies are initialized.
+	 *
+	 * @since    1.0.0
+	 * @return   string    The default plugin name.
+	 */
+	protected function get_default_plugin_name() {
+		return 'ventocalendar';
 	}
 
 	/**
@@ -256,7 +269,7 @@ class VentoCalendar {
 	 * @access   private
 	 */
 	private function define_shortcodes() {
-		$shortcodes = new VentoCalendar_Shortcodes();
+		$shortcodes = new VentoCalendar_Shortcodes( $this->get_plugin_name() );
 		$this->loader->add_action( 'init', $shortcodes, 'register_shortcodes' );
 	}
 
@@ -267,10 +280,10 @@ class VentoCalendar {
 	 * @access   private
 	 */
 	private function define_blocks() {
-		$block_event_info = new VentoCalendar_Block_Event_Info();
+		$block_event_info = new VentoCalendar_Block_Event_Info( $this->get_plugin_name() );
 		$this->loader->add_action( 'init', $block_event_info, 'register_block' );
 
-		$block_calendar = new VentoCalendar_Block_Calendar();
+		$block_calendar = new VentoCalendar_Block_Calendar( $this->get_plugin_name() );
 		$this->loader->add_action( 'init', $block_calendar, 'register_block' );
 	}
 
@@ -281,7 +294,7 @@ class VentoCalendar {
 	 * @access   private
 	 */
 	private function define_rest_api() {
-		$rest_api = new VentoCalendar_REST_API();
+		$rest_api = new VentoCalendar_REST_API( $this->get_plugin_name() );
 		$this->loader->add_action( 'rest_api_init', $rest_api, 'register_routes' );
 	}
 }

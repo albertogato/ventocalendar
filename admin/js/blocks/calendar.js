@@ -13,6 +13,7 @@
 		wp.components;
 	const { __ } = wp.i18n;
 	const { createElement: el } = wp.element;
+	const { applyFilters } = wp.hooks;
 
 	registerBlockType( 'ventocalendar/calendar', {
 		title: __( 'Events Calendar', 'ventocalendar' ),
@@ -80,6 +81,104 @@
 				showAddToCalendarApple,
 			} = attributes;
 
+			const calendarSettingsExtensionControls = applyFilters(
+				'ventocalendar.calendarSettingsControls',
+				[],
+				{
+					attributes,
+					setAttributes,
+				}
+			);
+
+			const extensionControls = applyFilters(
+				'ventocalendar.calendarEventDetailsControls',
+				[],
+				{
+					attributes,
+					setAttributes,
+				}
+			);
+
+			const eventDetailsControls = [
+				el( ToggleControl, {
+					label: __( 'Show start date', 'ventocalendar' ),
+					help: __(
+						'Display the start date in the event modal',
+						'ventocalendar'
+					),
+					checked: showStartDate,
+					onChange( value ) {
+						setAttributes( { showStartDate: value } );
+					},
+				} ),
+				el( ToggleControl, {
+					label: __( 'Show end date', 'ventocalendar' ),
+					help: __(
+						'Display the end date in the event modal',
+						'ventocalendar'
+					),
+					checked: showEndDate,
+					onChange( value ) {
+						setAttributes( { showEndDate: value } );
+					},
+				} ),
+				el( ToggleControl, {
+					label: __( 'Show start time', 'ventocalendar' ),
+					help: __(
+						'Display the start time in the event modal',
+						'ventocalendar'
+					),
+					checked: showStartTime,
+					onChange( value ) {
+						setAttributes( { showStartTime: value } );
+					},
+				} ),
+				el( ToggleControl, {
+					label: __( 'Show end time', 'ventocalendar' ),
+					help: __(
+						'Display the end time in the event modal',
+						'ventocalendar'
+					),
+					checked: showEndTime,
+					onChange( value ) {
+						setAttributes( { showEndTime: value } );
+					},
+				} ),
+				el( ToggleControl, {
+					label: __(
+						'Show Add to Google Calendar button',
+						'ventocalendar'
+					),
+					help: __(
+						'Display the Google add to calendar button in the event modal',
+						'ventocalendar'
+					),
+					checked: showAddToCalendarGoogle,
+					onChange( value ) {
+						setAttributes( {
+							showAddToCalendarGoogle: value,
+						} );
+					},
+				} ),
+				el( ToggleControl, {
+					label: __(
+						'Show Add to Apple Calendar button',
+						'ventocalendar'
+					),
+					help: __(
+						'Display the Apple add to calendar button in the event modal',
+						'ventocalendar'
+					),
+					checked: showAddToCalendarApple,
+					onChange( value ) {
+						setAttributes( {
+							showAddToCalendarApple: value,
+						} );
+					},
+				} ),
+				...extensionControls,
+			];
+
 			return el(
 				'div',
 				{},
@@ -139,7 +238,7 @@
 							},
 						} ),
 						el( SelectControl, {
-							label: __( 'Laoyut', 'ventocalendar' ),
+							label: __( 'Layout', 'ventocalendar' ),
 							value: layout,
 							options: [
 								{
@@ -158,7 +257,8 @@
 							onChange( value ) {
 								setAttributes( { layout: value } );
 							},
-						} )
+						} ),
+						...calendarSettingsExtensionControls
 					),
 					el(
 						PanelBody,
@@ -169,82 +269,7 @@
 							),
 							initialOpen: true,
 						},
-						el( ToggleControl, {
-							label: __( 'Show start date', 'ventocalendar' ),
-							help: __(
-								'Display the start date in the event modal',
-								'ventocalendar'
-							),
-							checked: showStartDate,
-							onChange( value ) {
-								setAttributes( { showStartDate: value } );
-							},
-						} ),
-						el( ToggleControl, {
-							label: __( 'Show end date', 'ventocalendar' ),
-							help: __(
-								'Display the end date in the event modal',
-								'ventocalendar'
-							),
-							checked: showEndDate,
-							onChange( value ) {
-								setAttributes( { showEndDate: value } );
-							},
-						} ),
-						el( ToggleControl, {
-							label: __( 'Show start time', 'ventocalendar' ),
-							help: __(
-								'Display the start time in the event modal',
-								'ventocalendar'
-							),
-							checked: showStartTime,
-							onChange( value ) {
-								setAttributes( { showStartTime: value } );
-							},
-						} ),
-						el( ToggleControl, {
-							label: __( 'Show end time', 'ventocalendar' ),
-							help: __(
-								'Display the end time in the event modal',
-								'ventocalendar'
-							),
-							checked: showEndTime,
-							onChange( value ) {
-								setAttributes( { showEndTime: value } );
-							},
-						} ),
-						el( ToggleControl, {
-							label: __(
-								'Show Add to Google Calendar button',
-								'ventocalendar'
-							),
-							help: __(
-								'Display the Google add to calendar button in the event modal',
-								'ventocalendar'
-							),
-							checked: showAddToCalendarGoogle,
-							onChange( value ) {
-								setAttributes( {
-									showAddToCalendarGoogle: value,
-								} );
-							},
-						} ),
-						el( ToggleControl, {
-							label: __(
-								'Show Add to Apple Calendar button',
-								'ventocalendar'
-							),
-							help: __(
-								'Display the Apple add to calendar button in the event modal',
-								'ventocalendar'
-							),
-							checked: showAddToCalendarApple,
-							onChange( value ) {
-								setAttributes( {
-									showAddToCalendarApple: value,
-								} );
-							},
-						} )
+						...eventDetailsControls
 					)
 				),
 				el(

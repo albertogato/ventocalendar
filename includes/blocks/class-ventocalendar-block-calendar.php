@@ -24,6 +24,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 class VentoCalendar_Block_Calendar {
 
 	/**
+	 * Plugin name.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      string
+	 */
+	private $plugin_name;
+
+	/**
+	 * Initialize block class.
+	 *
+	 * @since    1.0.0
+	 * @param    string $plugin_name Plugin name.
+	 */
+	public function __construct( $plugin_name = 'ventocalendar' ) {
+		$this->plugin_name = $plugin_name;
+	}
+
+	/**
 	 * Register the block.
 	 *
 	 * @since    1.0.0
@@ -36,7 +55,7 @@ class VentoCalendar_Block_Calendar {
 		wp_register_script(
 			'ventocalendar-block-calendar',
 			VENTOCALENDAR_CORE_URL . $script_path,
-			array( 'wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n', 'wp-data' ),
+			array( 'wp-blocks', 'wp-element', 'wp-editor', 'wp-components', 'wp-i18n', 'wp-data', 'wp-hooks' ),
 			file_exists( $script_file ) ? filemtime( $script_file ) : '1.0.0',
 			true
 		);
@@ -186,12 +205,17 @@ class VentoCalendar_Block_Calendar {
 			'ventocalendar-calendar',
 			'ventoCalendar',
 			array(
-				'restUrl' => rest_url(),
+				'restUrl'       => rest_url(),
+				'restNamespace' => $this->plugin_name . '/v1',
 			)
 		);
 
 		// Set script translations.
 		wp_set_script_translations( 'ventocalendar-calendar', 'ventocalendar', VENTOCALENDAR_CORE_PATH . 'languages' );
+		do_action( 'ventocalendar_calendar_assets_enqueued', $this->plugin_name );
+
+		$events_endpoint       = rest_url( $this->plugin_name . '/v1/events' );
+		$extra_data_attributes = apply_filters( 'ventocalendar_calendar_wrapper_data_attributes', array(), $attributes, $this->plugin_name );
 
 		// Generate unique ID for this calendar instance.
 		static $calendar_instance = 0;
@@ -219,6 +243,12 @@ class VentoCalendar_Block_Calendar {
 			data-show-add-to-calendar-apple="<?php echo $show_add_to_calendar_apple ? 'true' : 'false'; ?>"
 			data-date-format="<?php echo esc_attr( $date_format ); ?>"
 			data-time-format="<?php echo esc_attr( $time_format ); ?>"
+			data-events-endpoint="<?php echo esc_url( $events_endpoint ); ?>"
+			<?php foreach ( $extra_data_attributes as $attribute_name => $attribute_value ) : ?>
+				<?php if ( is_scalar( $attribute_value ) ) : ?>
+				data-<?php echo esc_attr( str_replace( '_', '-', sanitize_key( $attribute_name ) ) ); ?>="<?php echo esc_attr( (string) $attribute_value ); ?>"
+				<?php endif; ?>
+			<?php endforeach; ?>
 		></div>
 		<?php
 		return ob_get_clean();

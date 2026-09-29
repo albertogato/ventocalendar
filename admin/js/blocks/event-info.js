@@ -34,6 +34,18 @@
 				type: 'boolean',
 				default: true,
 			},
+			showLocation: {
+				type: 'boolean',
+				default: true,
+			},
+			showAddress: {
+				type: 'boolean',
+				default: true,
+			},
+			showMap: {
+				type: 'boolean',
+				default: true,
+			},
 		},
 		supports: {
 			html: false,
@@ -55,6 +67,9 @@
 						endDate: null,
 						startTime: null,
 						endTime: null,
+						location: null,
+						address: null,
+						showMap: false,
 						color: null,
 					};
 				}
@@ -67,6 +82,12 @@
 					endDate: meta._end_date || null,
 					startTime: meta._start_time || null,
 					endTime: meta._end_time || null,
+					location: meta._location || null,
+					address: meta._address || null,
+					showMap:
+						meta._show_map === true ||
+						meta._show_map === 1 ||
+						meta._show_map === '1',
 					color: meta._color || '#2271b1',
 				};
 			}, [] );
@@ -78,7 +99,7 @@
 				el(
 					PanelBody,
 					{
-						title: __( 'Time display settings', 'ventocalendar' ),
+						title: __( 'Event info settings', 'ventocalendar' ),
 						initialOpen: true,
 					},
 					el( CheckboxControl, {
@@ -93,6 +114,27 @@
 						checked: attributes.showEndTime,
 						onChange( value ) {
 							setAttributes( { showEndTime: value } );
+						},
+					} ),
+					el( CheckboxControl, {
+						label: __( 'Show location', 'ventocalendar' ),
+						checked: attributes.showLocation,
+						onChange( value ) {
+							setAttributes( { showLocation: value } );
+						},
+					} ),
+					el( CheckboxControl, {
+						label: __( 'Show address', 'ventocalendar' ),
+						checked: attributes.showAddress,
+						onChange( value ) {
+							setAttributes( { showAddress: value } );
+						},
+					} ),
+					el( CheckboxControl, {
+						label: __( 'Show map', 'ventocalendar' ),
+						checked: attributes.showMap,
+						onChange( value ) {
+							setAttributes( { showMap: value } );
 						},
 					} )
 				)
@@ -215,6 +257,16 @@
 				);
 			}
 
+			const location =
+				attributes.showLocation && postData.location
+					? postData.location
+					: '';
+			const address =
+				attributes.showAddress && postData.address
+					? postData.address
+					: '';
+			const shouldShowMap = attributes.showMap && postData.showMap;
+
 			// Render block preview.
 			return el(
 				'div',
@@ -263,7 +315,57 @@
 								},
 								endFormatted
 							)
-					)
+					),
+					( location || address ) &&
+						el(
+							'div',
+							{
+								className:
+									'ventocalendar-event-location-details',
+							},
+							location &&
+								el(
+									'p',
+									{
+										className:
+											'ventocalendar-event-location-line',
+									},
+									location
+								),
+							address &&
+								el(
+									'p',
+									{
+										className:
+											'ventocalendar-event-location-line',
+									},
+									address
+								)
+						),
+					shouldShowMap &&
+						el(
+							'div',
+							{
+								className: 'ventocalendar-event-map-wrapper',
+							},
+							el(
+								'div',
+								{
+									className: 'ventocalendar-event-map-view',
+									style: {
+										height: '220px',
+										display: 'flex',
+										alignItems: 'center',
+										justifyContent: 'center',
+										backgroundColor: '#eef3f8',
+										color: '#334155',
+										fontSize: '13px',
+										border: '1px solid #d1d5db',
+									},
+								},
+								__( 'Map preview', 'ventocalendar' )
+							)
+						)
 				)
 			);
 		},

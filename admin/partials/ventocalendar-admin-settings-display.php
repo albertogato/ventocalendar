@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<form method="post" action="options.php">
 		<?php
 		settings_fields( $this->plugin_name );
-		do_settings_sections( 'ventocalendar-settings' );
+		do_settings_sections( $this->get_settings_page_slug() );
 		submit_button();
 		?>
 	</form>

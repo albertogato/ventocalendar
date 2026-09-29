@@ -1,34 +1,51 @@
 === VentoCalendar ===
 Contributors: albertogato
-Tags: events, calendar, event calendar, schedule, gutenberg
+Tags: events, calendar, event calendar, event map, openstreetmap
 Requires at least: 5.0
-Tested up to: 7.0
-Stable tag: 1.2.0
+Tested up to: 7.1
+Stable tag: 1.3.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://ko-fi.com/albertogato
 
-A lightweight and intuitive events calendar plugin for WordPress.
+A lightweight and intuitive WordPress event calendar with interactive maps. No Google Maps API key needed.
 
 == Description ==
 
+# 📅 Simple & Lightweight WordPress Event Calendar
+
 VentoCalendar is a powerful yet simple WordPress plugin for creating and managing events. It provides an intuitive interface for adding events with start and end dates, customizable colors, and an interactive calendar view.
 
-**Free and privacy-friendly plugin:** No ads, no tracking, no external services required. All your event data stays on your server. Developed with WordPress coding standards and best practices in mind.
+Designed to focus on the essentials, VentoCalendar gives you a clean way to manage and display events without unnecessary complexity.
 
-= Features =
+**Free and privacy-friendly plugin:** No ads, no tracking, and no mandatory external services for the core calendar functionality. Your event data stays on your server. Developed with WordPress coding standards and best practices in mind.
+
+= 📅 Calendar Features =
 
 * **Custom Event Post Type** - Dedicated post type for events with all WordPress features
 * **Date & Time Management** - Easy-to-use datetime picker for start and end dates
 * **Color Coding** - Assign custom colors to events for better visual organization
-* **Interactive Calendar** - Beautiful calendar with selectable view type (monthly calendar or event list), with "Add to my calendar" buttons for Google Calendar and Apple Calendar.
+* **Interactive Calendar** - Beautiful calendar with selectable view type (monthly calendar or event list), with "Add to my calendar" buttons for Google Calendar and Apple Calendar
 * **Layout Options** - Choose between basic, compact, or clean layouts to customize the calendar appearance
 * **Gutenberg Blocks** - Two custom blocks for displaying calendars and event information
 * **Shortcodes** - Flexible shortcodes for displaying calendars and event information anywhere
 * **REST API** - Built-in REST API endpoints for custom integrations
 * **Responsive Design** - Fully responsive calendar that works on all devices
 * **Internationalization Ready** - Fully translatable with .pot file included
+
+= 📍 Event Locations & Optional Maps =
+
+Events can also have a physical location. Add a location or address to your events and optionally display an interactive map.
+
+* **Event Locations** - Add location and address information to your events
+* **Optional Interactive Maps** - Display a map for events that have a physical location
+* **Map Location Picker** - Select the event location directly on the map
+* **Powered by OpenFreeMap and MapLibre** - Open-source, community-driven map technology, with the MapLibre GL JS library bundled locally
+* **No Google Maps API Key** - Maps do not require a Google Maps API key or Google account
+* **No Geocoding Required** - Choose the map location manually without sending an address to a geocoding service
+
+Maps are completely optional and do not change the way the core calendar works.
 
 = Gutenberg Blocks =
 
@@ -42,6 +59,9 @@ VentoCalendar is a powerful yet simple WordPress plugin for creating and managin
 * `[ventocalendar-end-date]` - Display event end date
 * `[ventocalendar-start-time]` - Display event start time
 * `[ventocalendar-end-time]` - Display event end time
+* `[ventocalendar-location]` - Display event location
+* `[ventocalendar-address]` - Display event address
+* `[ventocalendar-map]` - Display event map
 
 All shortcodes use the date and time formats configured in Settings → General.
 
@@ -100,6 +120,22 @@ Yes, events are automatically sorted by date in the calendar view and REST API r
 
 Absolutely! Events can span multiple days. Simply set different start and end dates, and the calendar will display them as horizontal bars spanning the date range.
 
+= Can I add a location to an event? =
+
+Yes! You can add a location and address to your events. If the event has a physical location, you can also optionally enable an interactive map and select the location directly on the map.
+
+= Do I need a Google Maps API key? =
+
+No. VentoCalendar's optional maps do not require a Google Maps API key or a Google account.
+
+= Does VentoCalendar automatically convert addresses into map locations? =
+
+No. VentoCalendar does not require automatic address geocoding. When using a map, you can select and position the event location directly on the map.
+
+= Are maps required? =
+
+No. Maps are completely optional. If an event does not need a map, simply leave the map disabled.
+
 = Is the plugin translation ready? =
 
 Yes! The plugin includes a .pot file for translations and follows WordPress internationalization best practices. Both PHP and JavaScript strings are translatable.
@@ -128,8 +164,16 @@ Yes! The plugin includes REST API endpoints at `/wp-json/ventocalendar/v1/events
 4. Gutenberg blocks in the editor
 5. Plugin settings page
 6. Mobile responsive calendar view
+7. Event edit screen with location, address, and map location picker
 
 == Changelog ==
+
+= 1.3.0 =
+* Feature: Added event locations, with location and address fields for each event.
+* Feature: Added optional interactive maps for events, powered by OpenFreeMap and MapLibre.
+* Feature: Added a map location picker to select the event location directly on the map.
+* Feature: Maps do not require a Google Maps API key or an address geocoding service.
+* Fix: Corrected a typo in a UI string.
 
 = 1.2.0 =
 * Feature: Added Custom CSS field in Settings to allow custom styles without modifying plugin files.
@@ -176,6 +220,9 @@ Yes! The plugin includes REST API endpoints at `/wp-json/ventocalendar/v1/events
 
 == Upgrade Notice ==
 
+= 1.3.0 =
+* This update adds optional interactive maps for events, with a map location picker. No Google Maps API key required. No action required.
+
 = 1.2.0 =
 * Added Custom CSS field in Settings to allow custom styles without modifying plugin files.
 
@@ -208,37 +255,54 @@ Initial release of VentoCalendar. Install and start managing your events today!
 VentoCalendar is designed with privacy and WordPress.org guidelines in mind:
 
 = License =
+
 * **GPLv2 or later** - This plugin is free software licensed under the GNU General Public License v2 or later
 * Designed to comply with WordPress.org guidelines
 * All code is open source and available for review
 
 = No Obfuscated Code =
+
 * All JavaScript, PHP, and CSS code is readable and unminified
 * No build process or compilation required
 * All source code is human-readable and editable
 * No hidden functionality or encrypted code
 
-= No External Services Required =
-* **Self-hosted solution** - All functionality runs on your WordPress server
+= No Mandatory External Services =
+
+* **Self-hosted solution** - The core calendar functionality runs on your WordPress server
 * No mandatory third-party services or API keys required
-* Vue.js library is bundled with the plugin and loaded locally (no CDN).
-* No external accounts, subscriptions, or paid services needed
+* Vue.js library is bundled with the plugin and loaded locally (no CDN)
+* MapLibre GL JS library is bundled with the plugin and loaded locally (no CDN)
+* No external accounts, subscriptions, or paid services needed for the calendar
+
+= Optional Maps =
+
+Maps are optional. When a map is displayed, VentoCalendar uses OpenFreeMap to provide the map resources.
+
+* No Google Maps API key or account is required
+* No address is sent to a geocoding service
+* Map coordinates are stored with the event in your WordPress database
+* OpenFreeMap is only used when an event map is displayed
 
 = No Advertising =
-* The plugin does not display advertisements in the WordPress admin area or on the frontend.
-* No affiliate links or sponsored content are included.
-* All features are available without promotional notices or upsells.
+
+* The plugin does not display advertisements in the WordPress admin area or on the frontend
+* No affiliate links or sponsored content are included
+* All core calendar features are available without promotional notices or upsells
 
 = Privacy Friendly =
-* The plugin does not collect, track, or transmit user data to external services
+
+* The plugin does not collect, track, or transmit user data for analytics or advertising
 * No analytics, tracking scripts, or cookies are added by the plugin
 * Event data is stored locally in the WordPress database and remains under the site owner’s control
-* The plugin operates entirely within the WordPress environment without external communication
+* Optional map resources are loaded from OpenFreeMap when a map is displayed
 
 = What Data is Stored =
+
 * Event information (titles, descriptions, dates, colors) - stored in WordPress database
-* All data remains on your server under your control
-* No external communication or data sharing
+* Event location and address information, when provided
+* Map coordinates and map display settings, when a map is enabled
+* Event data remains on your server under your control
 
 == Developer Notes ==
 
@@ -251,6 +315,7 @@ The plugin follows WordPress Plugin Boilerplate architecture with a centralized 
 **Endpoint:** `GET /wp-json/ventocalendar/v1/events`
 
 **Parameters:**
+
 * `start` (optional) - Start date filter (Y-m-d format)
 * `end` (optional) - End date filter (Y-m-d format)
 
@@ -283,3 +348,4 @@ For support, feature requests, or bug reports, please visit the plugin's support
 
 * Built using [WordPress Plugin Boilerplate](https://github.com/DevinVinson/WordPress-Plugin-Boilerplate)
 * Calendar powered by [Vue.js](https://vuejs.org/)
+* Interactive maps powered by [OpenFreeMap](https://openfreemap.org/) and [MapLibre](https://maplibre.org/)

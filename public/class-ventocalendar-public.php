@@ -65,6 +65,11 @@ class VentoCalendar_Public {
 		$css_file = VENTOCALENDAR_CORE_PATH . 'public/css/ventocalendar-public.css';
 		wp_enqueue_style( $this->plugin_name, VENTOCALENDAR_CORE_URL . 'public/css/ventocalendar-public.css', array(), filemtime( $css_file ), 'all' );
 
+		if ( $this->should_enqueue_event_map_assets() ) {
+			$maplibre_css_file = VENTOCALENDAR_CORE_PATH . 'public/css/maplibre-gl.css';
+			wp_enqueue_style( 'ventocalendar-maplibre-gl', VENTOCALENDAR_CORE_URL . 'public/css/maplibre-gl.css', array(), filemtime( $maplibre_css_file ), 'all' );
+		}
+
 		// Append custom CSS after the plugin stylesheet.
 		$this->output_custom_css();
 	}
@@ -76,8 +81,66 @@ class VentoCalendar_Public {
 	 */
 	public function enqueue_scripts() {
 
-		$js_file = VENTOCALENDAR_CORE_PATH . 'public/js/ventocalendar-public.js';
-		wp_enqueue_script( $this->plugin_name, VENTOCALENDAR_CORE_URL . 'public/js/ventocalendar-public.js', array( 'jquery' ), filemtime( $js_file ), false );
+		$js_file      = VENTOCALENDAR_CORE_PATH . 'public/js/ventocalendar-public.js';
+		$dependencies = array( 'jquery' );
+
+		if ( $this->should_enqueue_event_map_assets() ) {
+			$maplibre_js_file = VENTOCALENDAR_CORE_PATH . 'public/js/maplibre-gl.js';
+			wp_enqueue_script( 'ventocalendar-maplibre-gl', VENTOCALENDAR_CORE_URL . 'public/js/maplibre-gl.js', array(), filemtime( $maplibre_js_file ), false );
+			$dependencies[] = 'ventocalendar-maplibre-gl';
+		}
+
+		wp_enqueue_script( $this->plugin_name, VENTOCALENDAR_CORE_URL . 'public/js/ventocalendar-public.js', $dependencies, filemtime( $js_file ), false );
+
+		if ( $this->should_enqueue_event_map_assets() ) {
+			wp_localize_script(
+				$this->plugin_name,
+				'ventocalendarPublicMapConfig',
+				array(
+					'styleUrl' => 'https://tiles.openfreemap.org/styles/liberty',
+				)
+			);
+		}
+	}
+
+	/**
+	 * Check if map assets should be enqueued for current request.
+	 *
+	 * @since 1.0.0
+	 * @return bool
+	 */
+	private function should_enqueue_event_map_assets() {
+		if ( ! is_singular( 'ventocalendar_event' ) ) {
+			return false;
+		}
+
+		$post_id = get_queried_object_id();
+
+		if ( ! $post_id ) {
+			return false;
+		}
+
+		$latitude  = get_post_meta( $post_id, '_location_latitude', true );
+		$longitude = get_post_meta( $post_id, '_location_longitude', true );
+		$has_valid_coordinates = $this->is_valid_coordinate( $latitude, -90, 90 ) && $this->is_valid_coordinate( $longitude, -180, 180 );
+
+		if ( ! $has_valid_coordinates ) {
+			return false;
+		}
+
+		$show_map = get_post_meta( $post_id, '_show_map', true );
+
+		if ( '1' === (string) $show_map ) {
+			return true;
+		}
+
+		$post = get_post( $post_id );
+
+		if ( ! $post instanceof WP_Post ) {
+			return false;
+		}
+
+		return has_shortcode( $post->post_content, 'ventocalendar-map' );
 	}
 
 	/**
@@ -147,6 +210,55 @@ class VentoCalendar_Public {
 	}
 
 	/**
+	 * Build event taxonomies HTML for Pro event information.
+	 *
+	 * @since    1.0.0
+	 * @param    int   $post_id Event post ID.
+	 * @param    array $options Plugin options.
+	 * @return   string
+	 */
+	private function get_event_taxonomies_html( $post_id, $options ) {
+		if ( 'ventocalendar-pro' !== $this->plugin_name ) {
+			return '';
+		}
+
+		$show_categories = isset( $options['show_categories'] ) && $options['show_categories'];
+		$show_tags       = isset( $options['show_tags'] ) && $options['show_tags'];
+
+		if ( ! $show_categories && ! $show_tags ) {
+			return '';
+		}
+
+		$taxonomies_html = '';
+
+		if ( $show_categories ) {
+			$categories = get_the_terms( $post_id, 'ventocalendar_event_category' );
+			if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) {
+				$category_names   = wp_list_pluck( $categories, 'name' );
+				$taxonomies_html .= '<div class="ventocalendar-event-taxonomy ventocalendar-event-categories">';
+				$taxonomies_html .= '<span class="ventocalendar-event-taxonomy-values">' . esc_html( implode( ', ', $category_names ) ) . '</span>';
+				$taxonomies_html .= '</div>';
+			}
+		}
+
+		if ( $show_tags ) {
+			$tags = get_the_terms( $post_id, 'ventocalendar_event_tag' );
+			if ( ! empty( $tags ) && ! is_wp_error( $tags ) ) {
+				$tag_names        = wp_list_pluck( $tags, 'name' );
+				$taxonomies_html .= '<div class="ventocalendar-event-taxonomy ventocalendar-event-tags">';
+				$taxonomies_html .= '<span class="ventocalendar-event-taxonomy-values">' . esc_html( implode( ', ', $tag_names ) ) . '</span>';
+				$taxonomies_html .= '</div>';
+			}
+		}
+
+		if ( '' === $taxonomies_html ) {
+			return '';
+		}
+
+		return '<div class="ventocalendar-event-taxonomies">' . $taxonomies_html . '</div>';
+	}
+
+	/**
 	 * Add event dates to the content of event posts.
 	 *
 	 * @since    1.0.0
@@ -154,18 +266,20 @@ class VentoCalendar_Public {
 	 * @return   string    The modified post content.
 	 */
 	public function display_event_dates( $content ) {
-		// Check if the option is enabled.
-		$options = get_option( $this->plugin_name, array() );
-		if ( ! isset( $options['show_event_info_automatically'] ) || ! $options['show_event_info_automatically'] ) {
-			return $content;
-		}
-
-		// Only apply to individual posts of type 'ventocalendar_event'.
 		if ( ! is_singular( 'ventocalendar_event' ) ) {
 			return $content;
 		}
 
 		global $post;
+
+		$map_html      = $this->get_event_map_html( $post->ID );
+		$location_html = $this->get_event_location_details_html( $post->ID );
+
+		// Check if the option is enabled.
+		$options = get_option( $this->plugin_name, array() );
+		if ( ! $this->is_option_enabled( $options, 'show_event_info_automatically' ) ) {
+			return $content;
+		}
 
 		// Get the dates, times, and color of the event.
 		$start_date  = get_post_meta( $post->ID, '_start_date', true );
@@ -189,8 +303,8 @@ class VentoCalendar_Public {
 		$time_format = get_option( 'time_format' );
 
 		// Get settings for showing times.
-		$show_start_time = isset( $options['show_start_time'] ) && $options['show_start_time'];
-		$show_end_time   = isset( $options['show_end_time'] ) && $options['show_end_time'];
+		$show_start_time = $this->is_option_enabled( $options, 'show_start_time' );
+		$show_end_time   = $this->is_option_enabled( $options, 'show_end_time' );
 
 		// Format the start date (with or without time).
 		$start_formatted = $this->format_date_time_display(
@@ -239,10 +353,114 @@ class VentoCalendar_Public {
 		}
 
 		$dates_html .= '</div>';
+		$dates_html .= $this->get_event_taxonomies_html( $post->ID, $options );
+		if ( '' !== $location_html ) {
+			$dates_html .= $location_html;
+		}
+		if ( '' !== $map_html ) {
+			$dates_html .= $map_html;
+		}
+
 		$dates_html .= '</div>';
 
 		// Add the dates to the beginning of the content.
 		return $dates_html . $content;
+	}
+
+	/**
+	 * Build the location text HTML for event single page.
+	 *
+	 * @since 1.0.0
+	 * @param int $post_id Event post ID.
+	 * @return string
+	 */
+	private function get_event_location_details_html( $post_id ) {
+		$location = get_post_meta( $post_id, '_location', true );
+		$address  = get_post_meta( $post_id, '_address', true );
+
+		if ( '' === trim( (string) $location ) && '' === trim( (string) $address ) ) {
+			return '';
+		}
+
+		$location_html = '<div class="ventocalendar-event-location-details">';
+
+		if ( '' !== trim( (string) $location ) ) {
+			$location_html .= '<p class="ventocalendar-event-location-line">' . esc_html( $location ) . '</p>';
+		}
+
+		if ( '' !== trim( (string) $address ) ) {
+			$location_html .= '<p class="ventocalendar-event-location-line">' . esc_html( $address ) . '</p>';
+		}
+
+		$location_html .= '</div>';
+
+		return $location_html;
+	}
+
+	/**
+	 * Build the map HTML for event single page.
+	 *
+	 * @since 1.0.0
+	 * @param int $post_id Event post ID.
+	 * @return string
+	 */
+	private function get_event_map_html( $post_id ) {
+		$show_map = get_post_meta( $post_id, '_show_map', true );
+
+		if ( '1' !== (string) $show_map ) {
+			return '';
+		}
+
+		$latitude  = get_post_meta( $post_id, '_location_latitude', true );
+		$longitude = get_post_meta( $post_id, '_location_longitude', true );
+
+		if ( ! $this->is_valid_coordinate( $latitude, -90, 90 ) || ! $this->is_valid_coordinate( $longitude, -180, 180 ) ) {
+			return '';
+		}
+
+		$latitude  = round( (float) $latitude, 7 );
+		$longitude = round( (float) $longitude, 7 );
+
+		$map_html  = '<div class="ventocalendar-event-map-wrapper">';
+		$map_html .= '<div class="ventocalendar-event-map-view" data-latitude="' . esc_attr( $latitude ) . '" data-longitude="' . esc_attr( $longitude ) . '" aria-label="' . esc_attr__( 'Event location map', 'ventocalendar' ) . '"></div>';
+		$map_html .= '</div>';
+
+		return $map_html;
+	}
+
+	/**
+	 * Validate coordinate value.
+	 *
+	 * @since 1.0.0
+	 * @param mixed $value Coordinate value.
+	 * @param float $min Minimum accepted value.
+	 * @param float $max Maximum accepted value.
+	 * @return bool
+	 */
+	private function is_valid_coordinate( $value, $min, $max ) {
+		if ( '' === (string) $value || ! is_numeric( $value ) ) {
+			return false;
+		}
+
+		$value = (float) $value;
+
+		return $value >= $min && $value <= $max;
+	}
+
+	/**
+	 * Check whether a settings option is enabled.
+	 *
+	 * @since 1.0.0
+	 * @param array  $options Plugin options.
+	 * @param string $key     Option key.
+	 * @return bool
+	 */
+	private function is_option_enabled( $options, $key ) {
+		if ( ! isset( $options[ $key ] ) ) {
+			return false;
+		}
+
+		return filter_var( $options[ $key ], FILTER_VALIDATE_BOOLEAN );
 	}
 
 	/**

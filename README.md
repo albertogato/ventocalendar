@@ -5,7 +5,7 @@ A lightweight and intuitive events calendar plugin for WordPress.
 Official development repository for the WordPress plugin:  
 https://wordpress.org/plugins/ventocalendar/
 
-Current stable version: **1.2.0**
+Current stable version: **1.3.0**
 
 ## About
 
@@ -16,6 +16,7 @@ Key characteristics:
 - Custom Event Post Type
 - Gutenberg blocks and shortcodes
 - REST API endpoints for integrations
+- Optional event locations and interactive maps
 - No external services, no tracking, no ads
 - Fully self-hosted and GPL licensed
 
@@ -26,6 +27,10 @@ The plugin follows WordPress coding standards and best practices and is designed
 - Custom Event Post Type with start and end dates  
 - Color-coded events  
 - Monthly calendar view and event list view  
+- Event locations and addresses
+- Optional interactive maps for events
+- Map location picker
+- No Google Maps API key or Google account required
 - Gutenberg blocks for calendar and event info  
 - Flexible shortcodes  
 - Built-in REST API  

@@ -13,8 +13,8 @@
  * @wordpress-plugin
  * Plugin Name:       VentoCalendar
  * Plugin URI:
- * Description:       A lightweight and intuitive events calendar plugin for WordPress.
- * Version:           1.2.0
+ * Description:       A lightweight and intuitive WordPress event calendar for creating, managing, and displaying events, with optional locations and interactive maps.
+ * Version:           1.3.0
  * Author:            Alberto Gato Otero (albertogato)
  * Author URI:        https://profiles.wordpress.org/albertogato/
  * License:           GPL-2.0+
@@ -45,7 +45,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'VENTOCALENDAR_VERSION', '1.2.0' );
+define( 'VENTOCALENDAR_VERSION', '1.3.0' );
 
 /**
  * Define the plugin base path and URL.
@@ -81,7 +81,7 @@ if ( ! defined( 'VENTOCALENDAR_CORE_URL' ) ) {
  */
 function ventocalendar_activate() {
 	require_once VENTOCALENDAR_CORE_PATH . 'includes/class-ventocalendar-activator.php';
-	VentoCalendar_Activator::activate();
+	VentoCalendar_Activator::activate( 'ventocalendar' );
 }
 
 /**

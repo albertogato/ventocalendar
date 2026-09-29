@@ -11,6 +11,10 @@
 
 	// Import translation function.
 	const { __ } = wp.i18n;
+	const mapConfig = window.ventocalendarMapConfig || {};
+	let adminMap = null;
+	let adminMarker = null;
+	let isMapInitialized = false;
 
 	/**
 	 * Calculate the next 00 or 30 minute multiple from now.
@@ -111,6 +115,282 @@
 				$endTime.val( defaultEndTime );
 			}
 		}
+	}
+
+	/**
+	 * Parse coordinate value and validate bounds.
+	 *
+	 * @param {string} value Coordinate value.
+	 * @param {number} min   Minimum accepted value.
+	 * @param {number} max   Maximum accepted value.
+	 * @return {number|null} Parsed coordinate or null when invalid.
+	 */
+	function parseCoordinate( value, min, max ) {
+		if ( value === undefined || value === null || value === '' ) {
+			return null;
+		}
+
+		const parsed = Number.parseFloat( value );
+
+		if ( Number.isNaN( parsed ) || parsed < min || parsed > max ) {
+			return null;
+		}
+
+		return parsed;
+	}
+
+	/**
+	 * Update coordinates fields and visible text.
+	 *
+	 * @param {number} latitude  Latitude coordinate.
+	 * @param {number} longitude Longitude coordinate.
+	 */
+	function updateCoordinates( latitude, longitude ) {
+		const $latitude = $( '#ventocalendar-location-latitude' );
+		const $longitude = $( '#ventocalendar-location-longitude' );
+		const $coordinatesText = $( '#ventocalendar-map-coordinates' );
+		const parsedLatitude = parseCoordinate( latitude, -90, 90 );
+		const parsedLongitude = parseCoordinate( longitude, -180, 180 );
+
+		if ( parsedLatitude === null || parsedLongitude === null ) {
+			$latitude.val( '' );
+			$longitude.val( '' );
+			$coordinatesText.text( '' );
+			return;
+		}
+
+		const lat = Number( parsedLatitude ).toFixed( 7 );
+		const lng = Number( parsedLongitude ).toFixed( 7 );
+
+		$latitude.val( lat );
+		$longitude.val( lng );
+
+		const prefix =
+			mapConfig.coordsPrefix || __( 'Coordinates:', 'ventocalendar' );
+		$coordinatesText.text( `${ prefix } ${ lat }, ${ lng }` );
+	}
+
+	/**
+	 * Get last map view from localStorage.
+	 *
+	 * @return {{ latitude:number, longitude:number, zoom:number }|null} Saved map view or null.
+	 */
+	function getLastMapView() {
+		const storageKey =
+			mapConfig.lastViewKey || 'ventocalendar_last_map_view';
+
+		try {
+			const raw = window.localStorage.getItem( storageKey );
+
+			if ( ! raw ) {
+				return null;
+			}
+
+			const parsed = JSON.parse( raw );
+			const latitude = parseCoordinate( parsed.latitude, -90, 90 );
+			const longitude = parseCoordinate( parsed.longitude, -180, 180 );
+			const zoom = Number.parseFloat( parsed.zoom );
+
+			if (
+				latitude === null ||
+				longitude === null ||
+				Number.isNaN( zoom )
+			) {
+				return null;
+			}
+
+			return { latitude, longitude, zoom };
+		} catch ( error ) {
+			return null;
+		}
+	}
+
+	/**
+	 * Save last map view to localStorage.
+	 */
+	function storeCurrentMapView() {
+		if ( ! adminMap ) {
+			return;
+		}
+
+		const center = adminMap.getCenter();
+		const zoom = adminMap.getZoom();
+		const storageKey =
+			mapConfig.lastViewKey || 'ventocalendar_last_map_view';
+
+		try {
+			window.localStorage.setItem(
+				storageKey,
+				JSON.stringify( {
+					latitude: center.lat,
+					longitude: center.lng,
+					zoom,
+				} )
+			);
+		} catch ( error ) {
+			// Ignore storage errors.
+		}
+	}
+
+	/**
+	 * Place or move marker and sync hidden inputs.
+	 *
+	 * @param {number}  latitude   Latitude coordinate.
+	 * @param {number}  longitude  Longitude coordinate.
+	 * @param {boolean} moveCenter Whether to center map after placing marker.
+	 */
+	function setMarkerPosition( latitude, longitude, moveCenter = false ) {
+		if ( ! adminMap ) {
+			return;
+		}
+
+		if ( ! adminMarker ) {
+			adminMarker = new maplibregl.Marker( { draggable: false } )
+				.setLngLat( [ longitude, latitude ] )
+				.addTo( adminMap );
+		} else {
+			adminMarker.setLngLat( [ longitude, latitude ] );
+		}
+
+		if ( moveCenter ) {
+			adminMap.flyTo( {
+				center: [ longitude, latitude ],
+				zoom: Math.max(
+					adminMap.getZoom(),
+					mapConfig.initialZoom || 12
+				),
+			} );
+		}
+
+		updateCoordinates( latitude, longitude );
+	}
+
+	/**
+	 * Initialize admin map for location selection.
+	 */
+	function initializeMap() {
+		if ( isMapInitialized || ! $( '#ventocalendar-event-map' ).length ) {
+			return;
+		}
+
+		if ( typeof maplibregl === 'undefined' ) {
+			return;
+		}
+
+		const $latitude = $( '#ventocalendar-location-latitude' );
+		const $longitude = $( '#ventocalendar-location-longitude' );
+		const currentLatitude = parseCoordinate( $latitude.val(), -90, 90 );
+		const currentLongitude = parseCoordinate( $longitude.val(), -180, 180 );
+
+		const storedView = getLastMapView();
+		const defaultLatitude = Number( mapConfig.defaultLat || 40.4168 );
+		const defaultLongitude = Number( mapConfig.defaultLng || -3.7038 );
+		const defaultZoom = Number( mapConfig.defaultZoom || 4 );
+
+		let initialLatitude = defaultLatitude;
+		let initialLongitude = defaultLongitude;
+		let initialZoom = defaultZoom;
+
+		if ( currentLatitude !== null && currentLongitude !== null ) {
+			initialLatitude = currentLatitude;
+			initialLongitude = currentLongitude;
+			initialZoom = Number( mapConfig.initialZoom || 12 );
+		} else if ( storedView ) {
+			initialLatitude = storedView.latitude;
+			initialLongitude = storedView.longitude;
+			initialZoom = storedView.zoom;
+		}
+
+		adminMap = new maplibregl.Map( {
+			container: 'ventocalendar-event-map',
+			style:
+				mapConfig.styleUrl ||
+				'https://tiles.openfreemap.org/styles/liberty',
+			center: [ initialLongitude, initialLatitude ],
+			zoom: initialZoom,
+			attributionControl: true,
+		} );
+
+		adminMap.addControl( new maplibregl.NavigationControl(), 'top-right' );
+
+		adminMap.on( 'click', function ( event ) {
+			setMarkerPosition( event.lngLat.lat, event.lngLat.lng );
+		} );
+
+		adminMap.on( 'moveend', storeCurrentMapView );
+
+		if ( currentLatitude !== null && currentLongitude !== null ) {
+			setMarkerPosition( currentLatitude, currentLongitude, false );
+		} else {
+			updateCoordinates( null, null );
+		}
+
+		adminMap.on( 'load', function () {
+			adminMap.resize();
+		} );
+
+		isMapInitialized = true;
+	}
+
+	/**
+	 * Toggle map field visibility.
+	 */
+	function toggleMapField() {
+		const $showMap = $( '#ventocalendar-show-map' );
+		const $mapField = $( '.ventocalendar-map-field' );
+
+		if ( ! $showMap.length || ! $mapField.length ) {
+			return;
+		}
+
+		const $map = $( '#ventocalendar-event-map' );
+
+		if ( $showMap.is( ':checked' ) ) {
+			$mapField.show();
+			$map.attr( 'aria-hidden', 'false' );
+			initializeMap();
+			if ( adminMap ) {
+				setTimeout( function () {
+					adminMap.resize();
+				}, 50 );
+			}
+		} else {
+			$mapField.hide();
+			$map.attr( 'aria-hidden', 'true' );
+		}
+	}
+
+	/**
+	 * Handle browser geolocation from explicit user action.
+	 */
+	function handleUseMyLocation() {
+		if ( ! adminMap || ! navigator.geolocation ) {
+			return;
+		}
+
+		navigator.geolocation.getCurrentPosition(
+			function ( position ) {
+				setMarkerPosition(
+					position.coords.latitude,
+					position.coords.longitude,
+					true
+				);
+			},
+			function () {
+				const geoErrorMessage =
+					mapConfig.geoError ||
+					__(
+						'Unable to access your location. You can still set it manually on the map.',
+						'ventocalendar'
+					);
+				$( '#ventocalendar-map-coordinates' ).text( geoErrorMessage );
+			},
+			{
+				enableHighAccuracy: false,
+				timeout: 10000,
+				maximumAge: 60000,
+			}
+		);
 	}
 
 	/**
@@ -316,6 +596,8 @@
 		const $startTime = $( '#ventocalendar-start-time' );
 		const $endTime = $( '#ventocalendar-end-time' );
 		const $endDate = $( '#ventocalendar-end-date' );
+		const $showMap = $( '#ventocalendar-show-map' );
+		const $useMyLocation = $( '#ventocalendar-use-my-location' );
 
 		// All day checkbox toggle.
 		$allDay.on( 'change', function () {
@@ -338,6 +620,9 @@
 		// Validate on all field changes.
 		$startDate.on( 'change', validateForm );
 		$endDate.on( 'change', validateForm );
+
+		$showMap.on( 'change', toggleMapField );
+		$useMyLocation.on( 'click', handleUseMyLocation );
 
 		// Classic editor form submission.
 		$( '#post' ).on( 'submit', function ( e ) {
@@ -397,6 +682,9 @@
 
 		// Apply initial state of "All day" checkbox.
 		toggleAllDayFields();
+
+		// Apply initial state of "Show map" checkbox.
+		toggleMapField();
 
 		// Initialize event listeners.
 		initializeEventListeners();

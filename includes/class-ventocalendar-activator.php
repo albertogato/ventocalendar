@@ -31,8 +31,9 @@ class VentoCalendar_Activator {
 	 * to ensure custom post types are properly registered.
 	 *
 	 * @since 1.0.0
+	 * @param string $option_name Option name used to store plugin settings.
 	 */
-	public static function activate() {
+	public static function activate( $option_name = 'ventocalendar' ) {
 		// Register the CPT before flushing rewrite rules.
 		// We need to manually register it here because the 'init' hook hasn't run yet.
 		require_once plugin_dir_path( __FILE__ ) . 'cpt/class-ventocalendar-cpt-event.php';
@@ -51,8 +52,8 @@ class VentoCalendar_Activator {
 		);
 
 		// Only add defaults if option doesn't exist yet.
-		if ( false === get_option( 'ventocalendar' ) ) {
-			add_option( 'ventocalendar', $default_options );
+		if ( false === get_option( $option_name ) ) {
+			add_option( $option_name, $default_options );
 		}
 	}
 }

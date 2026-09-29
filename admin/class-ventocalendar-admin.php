@@ -40,6 +40,33 @@ class VentoCalendar_Admin {
 	private $version;
 
 	/**
+	 * Admin menu slug.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      string
+	 */
+	private $menu_slug;
+
+	/**
+	 * Settings page slug.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      string
+	 */
+	private $settings_page_slug;
+
+	/**
+	 * Help page slug.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      string
+	 */
+	private $help_page_slug;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -50,6 +77,15 @@ class VentoCalendar_Admin {
 
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
+		$this->menu_slug   = $this->plugin_name;
+
+		if ( 'ventocalendar-pro' === $this->plugin_name ) {
+			$this->settings_page_slug = 'ventocalendar-pro-settings';
+			$this->help_page_slug     = 'ventocalendar-pro-help';
+		} else {
+			$this->settings_page_slug = 'ventocalendar-settings';
+			$this->help_page_slug     = 'ventocalendar-help';
+		}
 	}
 
 	/**
@@ -63,7 +99,7 @@ class VentoCalendar_Admin {
 			__( 'VentoCalendar', 'ventocalendar' ),
 			__( 'VentoCalendar', 'ventocalendar' ),
 			'edit_posts',
-			'ventocalendar',
+			$this->menu_slug,
 			'',
 			'dashicons-calendar-alt',
 			6
@@ -71,7 +107,7 @@ class VentoCalendar_Admin {
 
 		// Add Events submenu (list all events).
 		add_submenu_page(
-			'ventocalendar',
+			$this->menu_slug,
 			__( 'Events', 'ventocalendar' ),
 			__( 'Events', 'ventocalendar' ),
 			'edit_posts',
@@ -80,7 +116,7 @@ class VentoCalendar_Admin {
 
 		// Add New Event submenu.
 		add_submenu_page(
-			'ventocalendar',
+			$this->menu_slug,
 			__( 'Add new event', 'ventocalendar' ),
 			__( 'Add new event', 'ventocalendar' ),
 			'edit_posts',
@@ -89,21 +125,21 @@ class VentoCalendar_Admin {
 
 		// Add Settings submenu.
 		add_submenu_page(
-			'ventocalendar',
+			$this->menu_slug,
 			__( 'Settings', 'ventocalendar' ),
 			__( 'Settings', 'ventocalendar' ),
 			'manage_options',
-			'ventocalendar-settings',
+			$this->settings_page_slug,
 			array( $this, 'display_plugin_settings_page' )
 		);
 
 		// Add Usage / Help submenu.
 		add_submenu_page(
-			'ventocalendar',
+			$this->menu_slug,
 			__( 'Usage / Help', 'ventocalendar' ),
 			__( 'Usage / Help', 'ventocalendar' ),
 			'manage_options',
-			'ventocalendar-help',
+			$this->help_page_slug,
 			array( $this, 'display_plugin_help_page' )
 		);
 	}
@@ -115,7 +151,7 @@ class VentoCalendar_Admin {
 	 */
 	public function cleanup_admin_menu() {
 		// Remove the auto-generated first submenu with same slug as parent.
-		remove_submenu_page( 'ventocalendar', 'ventocalendar' );
+		remove_submenu_page( $this->menu_slug, $this->menu_slug );
 	}
 
 	/**
@@ -124,6 +160,19 @@ class VentoCalendar_Admin {
 	 * @since    1.0.0
 	 */
 	public function register_settings() {
+		$is_pro = 'ventocalendar-pro' === $this->plugin_name;
+
+		$default_options = array(
+			'show_event_info_automatically' => 0,
+			'show_start_time'               => 0,
+			'show_end_time'                 => 0,
+		);
+
+		if ( $is_pro ) {
+			$default_options['show_categories'] = 0;
+			$default_options['show_tags']       = 0;
+		}
+
 		// Register setting.
 		register_setting(
 			$this->plugin_name,
@@ -131,11 +180,7 @@ class VentoCalendar_Admin {
 			array(
 				'type'              => 'array',
 				'sanitize_callback' => array( $this, 'validate_settings' ),
-				'default'           => array(
-					'show_event_info_automatically' => 0,
-					'show_start_time'               => 0,
-					'show_end_time'                 => 0,
-				),
+				'default'           => $default_options,
 			),
 		);
 
@@ -144,7 +189,7 @@ class VentoCalendar_Admin {
 			$this->plugin_name . '_general',
 			__( 'General settings', 'ventocalendar' ),
 			array( $this, 'render_settings_section' ),
-			'ventocalendar-settings'
+			$this->settings_page_slug
 		);
 
 		// Add settings field.
@@ -152,7 +197,7 @@ class VentoCalendar_Admin {
 			'show_event_info_automatically',
 			__( 'Show event info automatically', 'ventocalendar' ),
 			array( $this, 'render_show_event_info_field' ),
-			'ventocalendar-settings',
+			$this->settings_page_slug,
 			$this->plugin_name . '_general',
 			array( 'label_for' => 'show_event_info_automatically' )
 		);
@@ -162,7 +207,7 @@ class VentoCalendar_Admin {
 			'show_start_time',
 			__( 'Show start time', 'ventocalendar' ),
 			array( $this, 'render_show_start_time_field' ),
-			'ventocalendar-settings',
+			$this->settings_page_slug,
 			$this->plugin_name . '_general',
 			array( 'label_for' => 'show_start_time' )
 		);
@@ -172,17 +217,37 @@ class VentoCalendar_Admin {
 			'show_end_time',
 			__( 'Show end time', 'ventocalendar' ),
 			array( $this, 'render_show_end_time_field' ),
-			'ventocalendar-settings',
+			$this->settings_page_slug,
 			$this->plugin_name . '_general',
 			array( 'label_for' => 'show_end_time' )
 		);
+
+		if ( $is_pro ) {
+			add_settings_field(
+				'show_categories',
+				__( 'Show categories', 'ventocalendar' ),
+				array( $this, 'render_show_categories_field' ),
+				$this->settings_page_slug,
+				$this->plugin_name . '_general',
+				array( 'label_for' => 'show_categories' )
+			);
+
+			add_settings_field(
+				'show_tags',
+				__( 'Show tags', 'ventocalendar' ),
+				array( $this, 'render_show_tags_field' ),
+				$this->settings_page_slug,
+				$this->plugin_name . '_general',
+				array( 'label_for' => 'show_tags' )
+			);
+		}
 
 		// Add settings section for Custom CSS.
 		add_settings_section(
 			$this->plugin_name . '_custom_css',
 			__( 'Custom CSS', 'ventocalendar' ),
 			array( $this, 'render_custom_css_section' ),
-			'ventocalendar-settings'
+			$this->settings_page_slug
 		);
 
 		// Add custom CSS field.
@@ -190,7 +255,7 @@ class VentoCalendar_Admin {
 			'custom_css',
 			__( 'Custom CSS', 'ventocalendar' ),
 			array( $this, 'render_custom_css_field' ),
-			'ventocalendar-settings',
+			$this->settings_page_slug,
 			$this->plugin_name . '_custom_css',
 			array( 'label_for' => 'custom_css' )
 		);
@@ -266,6 +331,46 @@ class VentoCalendar_Admin {
 	}
 
 	/**
+	 * Render the show categories checkbox field (Pro only).
+	 *
+	 * @since    1.0.0
+	 */
+	public function render_show_categories_field() {
+		$options = get_option( $this->plugin_name, array() );
+		$value   = isset( $options['show_categories'] ) ? $options['show_categories'] : 0;
+		?>
+		<input type="checkbox"
+				id="show_categories"
+				name="<?php echo esc_attr( $this->plugin_name ); ?>[show_categories]"
+				value="1"
+				<?php checked( 1, $value ); ?> />
+		<label for="show_categories">
+			<?php esc_html_e( 'Include categories in the event information', 'ventocalendar' ); ?>
+		</label>
+		<?php
+	}
+
+	/**
+	 * Render the show tags checkbox field (Pro only).
+	 *
+	 * @since    1.0.0
+	 */
+	public function render_show_tags_field() {
+		$options = get_option( $this->plugin_name, array() );
+		$value   = isset( $options['show_tags'] ) ? $options['show_tags'] : 0;
+		?>
+		<input type="checkbox"
+				id="show_tags"
+				name="<?php echo esc_attr( $this->plugin_name ); ?>[show_tags]"
+				value="1"
+				<?php checked( 1, $value ); ?> />
+		<label for="show_tags">
+			<?php esc_html_e( 'Include tags in the event information', 'ventocalendar' ); ?>
+		</label>
+		<?php
+	}
+
+	/**
 	 * Render the custom CSS section description.
 	 *
 	 * @since    1.0.0
@@ -312,6 +417,11 @@ class VentoCalendar_Admin {
 			'custom_css'                    => '',
 		);
 
+		if ( 'ventocalendar-pro' === $this->plugin_name ) {
+			$defaults['show_categories'] = 0;
+			$defaults['show_tags']       = 0;
+		}
+
 		if ( ! is_array( $input ) ) {
 			return $defaults;
 		}
@@ -319,7 +429,14 @@ class VentoCalendar_Admin {
 		// Normalize values.
 		$valid = $defaults;
 
-		foreach ( array( 'show_event_info_automatically', 'show_start_time', 'show_end_time' ) as $key ) {
+		$checkbox_fields = array( 'show_event_info_automatically', 'show_start_time', 'show_end_time' );
+
+		if ( 'ventocalendar-pro' === $this->plugin_name ) {
+			$checkbox_fields[] = 'show_categories';
+			$checkbox_fields[] = 'show_tags';
+		}
+
+		foreach ( $checkbox_fields as $key ) {
 			if ( isset( $input[ $key ] ) && '1' === (string) $input[ $key ] ) {
 				$valid[ $key ] = 1;
 			}
@@ -362,6 +479,12 @@ class VentoCalendar_Admin {
 		wp_enqueue_style( $this->plugin_name, VENTOCALENDAR_CORE_URL . 'admin/css/ventocalendar-admin.css', array(), filemtime( $css_file ), 'all' );
 
 		wp_enqueue_style( 'wp-color-picker' );
+
+		$screen = get_current_screen();
+		if ( $screen && 'ventocalendar_event' === $screen->post_type ) {
+			$maplibre_css_file = VENTOCALENDAR_CORE_PATH . 'public/css/maplibre-gl.css';
+			wp_enqueue_style( 'ventocalendar-maplibre-gl', VENTOCALENDAR_CORE_URL . 'public/css/maplibre-gl.css', array(), filemtime( $maplibre_css_file ), 'all' );
+		}
 	}
 
 	/**
@@ -377,13 +500,37 @@ class VentoCalendar_Admin {
 		// Enqueue meta box script only on event edit screen.
 		$screen = get_current_screen();
 		if ( $screen && 'ventocalendar_event' === $screen->post_type ) {
+			$maplibre_js_file = VENTOCALENDAR_CORE_PATH . 'public/js/maplibre-gl.js';
+			wp_enqueue_script(
+				'ventocalendar-maplibre-gl',
+				VENTOCALENDAR_CORE_URL . 'public/js/maplibre-gl.js',
+				array(),
+				filemtime( $maplibre_js_file ),
+				false
+			);
+
 			$js_file = VENTOCALENDAR_CORE_PATH . 'admin/js/ventocalendar-meta-box.js';
 			wp_enqueue_script(
 				$this->plugin_name . '-meta-box',
 				VENTOCALENDAR_CORE_URL . 'admin/js/ventocalendar-meta-box.js',
-				array( 'jquery', 'wp-color-picker', 'wp-data', 'wp-edit-post', 'wp-notices', 'wp-i18n' ),
+				array( 'jquery', 'wp-color-picker', 'wp-data', 'wp-edit-post', 'wp-notices', 'wp-i18n', 'ventocalendar-maplibre-gl' ),
 				filemtime( $js_file ),
 				false
+			);
+
+			wp_localize_script(
+				$this->plugin_name . '-meta-box',
+				'ventocalendarMapConfig',
+				array(
+					'styleUrl'     => 'https://tiles.openfreemap.org/styles/liberty',
+					'lastViewKey'  => 'ventocalendar_last_map_view',
+					'defaultLat'   => 40.4168,
+					'defaultLng'   => -3.7038,
+					'defaultZoom'  => 4,
+					'initialZoom'  => 12,
+					'coordsPrefix' => __( 'Coordinates:', 'ventocalendar' ),
+					'geoError'     => __( 'Unable to access your location. You can still set it manually on the map.', 'ventocalendar' ),
+				)
 			);
 
 			// Set script translations.
@@ -393,5 +540,25 @@ class VentoCalendar_Admin {
 				VENTOCALENDAR_CORE_PATH . 'languages'
 			);
 		}
+	}
+
+	/**
+	 * Get settings page slug.
+	 *
+	 * @since    1.0.0
+	 * @return   string
+	 */
+	public function get_settings_page_slug() {
+		return $this->settings_page_slug;
+	}
+
+	/**
+	 * Get help page slug.
+	 *
+	 * @since    1.0.0
+	 * @return   string
+	 */
+	public function get_help_page_slug() {
+		return $this->help_page_slug;
 	}
 }
